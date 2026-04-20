@@ -453,7 +453,7 @@ const PolicyReviewPage = ({ history, theme, toggleTheme, onBackToDebrief, onRest
                     <div className="p-4 bg-coffee-900/50 border-b border-coffee-700">
                         <h3 className="text-lg font-bold text-orange-400">How the RL Pipeline Works</h3>
                         <p className="text-xs text-coffee-400 mt-1">
-                            This flow shows how the RL agent learns pricing over time by observing the market, acting, and updating its policy from rewards and penalties.
+                            This flow shows how the RL agent learns pricing over time by observing, acting, and updating its policy from rewards and penalties | Click on the boxes to keep the pop-ups open.
                         </p>
                     </div>
 

@@ -31,6 +31,8 @@ import '@xyflow/react/dist/style.css';
 const LENS_WIDTH = 430;
 const LENS_HEIGHT = 250;
 const LENS_ZOOM = 1.85;
+const LENS_CURSOR_X = 0.23;
+const LENS_CURSOR_Y = 0.25;
 const ARROW_TARGET_OUTSET = 18;
 const FEEDBACK_TO_NET_REWARDS_ARROW_OUTSET = 50;
 const FEEDBACK_TO_STATE_ARROW_OUTSET = 50;
@@ -1158,8 +1160,8 @@ const RLPipelineFlow = ({ theme }) => {
         setIsLensVisible(false);
     };
 
-    const lensTranslateX = (LENS_WIDTH / 2) - (lensPosition.x * LENS_ZOOM);
-    const lensTranslateY = (LENS_HEIGHT / 2) - (lensPosition.y * LENS_ZOOM);
+    const lensTranslateX = (LENS_WIDTH * LENS_CURSOR_X) - (lensPosition.x * LENS_ZOOM);
+    const lensTranslateY = (LENS_HEIGHT * LENS_CURSOR_Y) - (lensPosition.y * LENS_ZOOM);
     const lensViewport = viewport
         ? {
             x: (viewport.x * LENS_ZOOM) + lensTranslateX,
@@ -1257,8 +1259,8 @@ const RLPipelineFlow = ({ theme }) => {
                                 style={{
                                     width: LENS_WIDTH,
                                     height: LENS_HEIGHT,
-                                    left: lensPosition.x - (LENS_WIDTH / 2),
-                                    top: lensPosition.y - (LENS_HEIGHT / 2),
+                                    left: lensPosition.x - (LENS_WIDTH * LENS_CURSOR_X),
+                                    top: lensPosition.y - (LENS_HEIGHT * LENS_CURSOR_Y),
                                     background: isLight
                                         ? 'radial-gradient(ellipse at 35% 35%, rgba(255,255,255,0.72), rgba(255,248,235,0.18) 58%, rgba(120,53,15,0.18) 100%)'
                                         : 'radial-gradient(ellipse at 35% 35%, rgba(255,255,255,0.18), rgba(12,10,9,0.16) 58%, rgba(0,0,0,0.4) 100%)',
