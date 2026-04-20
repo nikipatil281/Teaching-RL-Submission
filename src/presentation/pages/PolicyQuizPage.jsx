@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowLeft, ClipboardCheck, Sun, Moon, CheckCircle2, Download, LogOut, PlusCircle, Trash2, XCircle, RotateCcw } from 'lucide-react';
 import { jsPDF } from 'jspdf';
@@ -215,16 +215,16 @@ const getScenarioEvaluation = (scenario, encounteredScenarioKeys, policyLookup) 
 
   if (policyLookup?.status !== 'ready') {
     const statusMessage = policyLookup?.status === 'missing'
-      ? 'No CSV RL policy was found for this scenario, so no scenario point is awarded.'
+      ? 'This combination is not a valid simulation state, so it cannot occur during the simulation and has no learned RL policy to compare against. No scenario point is awarded.'
       : 'The CSV RL policy is still loading for this scenario.';
 
     return {
       isCorrect: false,
       isPolicyAligned: false,
       wasEncountered,
-      rangeText: 'CSV policy unavailable',
+      rangeText: policyLookup?.status === 'missing' ? 'Invalid simulation state' : 'Policy loading',
       feedbackTone: 'amber',
-      feedbackTitle: policyLookup?.status === 'missing' ? 'No CSV policy found' : 'Loading CSV policy',
+      feedbackTitle: policyLookup?.status === 'missing' ? 'Invalid simulation state' : 'Loading RL policy',
       feedbackBody: statusMessage,
       rlPrice: null,
     };
@@ -380,9 +380,9 @@ const PolicyQuizPage = ({
     ? 'w-8 h-8 text-emerald-600'
     : 'w-8 h-8 text-emerald-300';
 
-  const updateQuizState = (updater) => {
+  const updateQuizState = useCallback((updater) => {
     setQuizState((previous) => (typeof updater === 'function' ? updater(previous) : updater));
-  };
+  }, [setQuizState]);
 
   const handleAnswerChange = (questionId, value) => {
     if (submitted) return;
