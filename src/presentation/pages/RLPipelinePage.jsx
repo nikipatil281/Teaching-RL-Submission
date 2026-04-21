@@ -13,8 +13,8 @@ const RLPipelinePage = ({
     hasRestartedSimulation = false,
 }) => {
     return (
-        <div className={`min-h-screen bg-coffee-950 text-coffee-100 p-4 md:p-5 flex flex-col animate-in fade-in duration-500 overflow-y-auto ${theme}`}>
-            <div className="w-full flex items-center justify-between gap-4 mb-4">
+        <div className={`min-h-screen bg-coffee-950 text-coffee-100 p-3 md:p-4 flex flex-col animate-in fade-in duration-500 overflow-y-auto ${theme}`}>
+            <div className="w-full flex items-center justify-between gap-4 mb-3">
                 <div className="flex items-center gap-3">
                     <motion.button
                         whileHover={{ scale: 1.05, x: -5 }}
@@ -41,25 +41,25 @@ const RLPipelinePage = ({
                 </button>
             </div>
 
-            <div className="flex-1 flex flex-col rounded-[32px] border border-coffee-700 bg-coffee-900/90 shadow-2xl overflow-hidden min-h-[calc(100vh-172px)]">
-                <div className="px-5 pt-4 pb-3 border-b border-coffee-700/70 bg-coffee-950/35">
+            <div className="flex-1 flex flex-col rounded-[32px] border border-coffee-700 bg-coffee-900/90 shadow-2xl overflow-hidden min-h-[calc(100vh-20px)]">
+                <div className="px-5 pt-3 pb-2 border-b border-coffee-700/70 bg-coffee-950/35">
                     <p className="text-xs md:text-sm text-coffee-300">
-                        Click the pipeline cards to pin their explanations. The zoom lens has been removed here so the flow stays large and clear.
+                        Click the specific pipeline cards to pin their explanations.
                     </p>
                 </div>
 
-                <div className="flex-1 p-2 md:p-3">
+                <div className="flex-1 p-1.5 md:p-2">
                     <RLPipelineFlow
                         theme={theme}
                         showLensToggle={false}
                         defaultLensEnabled={false}
-                        desktopHeightClass="h-[calc(100vh-220px)]"
-                        fitViewOptions={{ padding: 0.015, maxZoom: 1.28 }}
+                        desktopHeightClass="h-[calc(100vh-50px)]"
+                        fitViewOptions={{ padding: 0.01, maxZoom: 1.32 }}
                     />
                 </div>
             </div>
 
-            <div className="w-full mt-4 flex flex-wrap items-center justify-end gap-3">
+            <div className="w-full mt-3 flex flex-wrap items-center justify-end gap-3">
                 {!hasRestartedSimulation && (
                     <motion.button
                         whileHover={{ scale: 1.05 }}
