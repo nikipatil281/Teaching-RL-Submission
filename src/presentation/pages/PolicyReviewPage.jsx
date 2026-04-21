@@ -262,9 +262,9 @@ const PolicyReviewPage = ({ history, theme, toggleTheme, onBackToDebrief, onNext
     });
 
     return (
-        <div className={`min-h-screen bg-coffee-950 text-coffee-100 p-4 md:p-8 flex flex-col items-center animate-in fade-in duration-500 overflow-y-auto ${theme}`}>
+        <div className={`min-h-screen bg-coffee-950 text-coffee-100 p-4 md:p-6 xl:p-8 flex flex-col items-center animate-in fade-in duration-500 overflow-y-auto ${theme}`}>
             {/* Header / Actions */}
-            <div className="w-full max-w-6xl flex justify-between items-center mb-8">
+            <div className="w-full max-w-[1500px] flex justify-between items-center mb-6">
                 <div className="flex gap-4">
                     <motion.button
                         whileHover={{ scale: 1.05, x: -5 }}
@@ -307,7 +307,7 @@ const PolicyReviewPage = ({ history, theme, toggleTheme, onBackToDebrief, onNext
             </div>
 
             {/* Main Content Area to Export */}
-            <div className="w-full max-w-6xl flex flex-col items-center bg-coffee-900 p-8 rounded-2xl border border-coffee-700 shadow-2xl relative">
+            <div className="w-full max-w-[1500px] flex flex-col items-center bg-coffee-900 p-6 md:p-8 rounded-2xl border border-coffee-700 shadow-2xl relative">
                 <div className="flex items-center gap-3 mb-8">
                     <TableProperties className="w-8 h-8 text-emerald-400" />
                     <h2 className="text-3xl font-bold text-coffee-100">Reinforcement Learning Optimal Policy Review</h2>
@@ -315,29 +315,29 @@ const PolicyReviewPage = ({ history, theme, toggleTheme, onBackToDebrief, onNext
 
                 {/* Player Policy Summary Table */}
                 <div className="w-full flex-1 flex flex-col mb-4 bg-coffee-800 border border-coffee-700 rounded-xl overflow-hidden">
-                    <div className="p-4 bg-coffee-900/50 border-b border-coffee-700">
-                        <h3 className="text-lg font-bold text-amber-400 flex items-center gap-2">
-                            <TableProperties className="w-5 h-5" />
+                    <div className="p-5 md:p-6 bg-coffee-900/50 border-b border-coffee-700">
+                        <h3 className="text-xl md:text-2xl font-bold text-amber-400 flex items-center gap-3">
+                            <TableProperties className="w-6 h-6" />
                             Pricing Policy Summary - RL and You
                         </h3>
-                        <p className="text-xs text-coffee-400 mt-1">Discover the prefered price range across different market states. Variables that affect demand are accounted for.</p>
+                        <p className="text-sm text-coffee-400 mt-2">Discover the prefered price range across different market states. Variables that affect demand are accounted for.</p>
                     </div>
 
                     <div className="overflow-x-auto">
-                        <table className="w-full text-sm text-coffee-200">
-                            <thead className="bg-coffee-900/30 text-coffee-400 uppercase text-[10px] sticky top-0">
+                        <table className="w-full text-base text-coffee-200">
+                            <thead className="bg-coffee-900/30 text-coffee-400 uppercase text-[11px] sticky top-0">
                                 <tr>
-                                    <th className="px-3 py-2.5 font-bold border-b border-coffee-700 text-left whitespace-nowrap">Weather</th>
-                                    <th className="px-3 py-2.5 font-bold border-b border-coffee-700 text-left whitespace-nowrap">Day(s)</th>
-                                    <th className="px-3 py-2.5 font-bold border-b border-coffee-700 text-center whitespace-nowrap">Start Inventory</th>
-                                    <th className="px-3 py-2.5 font-bold border-b border-coffee-700 text-center whitespace-nowrap">Local Event</th>
-                                    <th className="px-3 py-2.5 font-bold border-b border-coffee-700 text-center whitespace-nowrap">Competitor</th>
-                                    <th className="px-3 py-2.5 font-bold border-b border-coffee-700 text-right text-orange-400 whitespace-nowrap">RL's Learned Range</th>
-                                    <th className="px-3 py-2.5 font-bold border-b border-coffee-700 text-right text-emerald-400 whitespace-nowrap">Your Price Range</th>
-                                    <th className="px-3 py-2.5 font-bold border-b border-coffee-700 text-center">
+                                    <th className="px-4 py-3.5 font-bold border-b border-coffee-700 text-left whitespace-nowrap">Weather</th>
+                                    <th className="px-4 py-3.5 font-bold border-b border-coffee-700 text-left whitespace-nowrap">Day(s)</th>
+                                    <th className="px-4 py-3.5 font-bold border-b border-coffee-700 text-center whitespace-nowrap">Start Inventory</th>
+                                    <th className="px-4 py-3.5 font-bold border-b border-coffee-700 text-center whitespace-nowrap">Local Event</th>
+                                    <th className="px-4 py-3.5 font-bold border-b border-coffee-700 text-center whitespace-nowrap">Competitor</th>
+                                    <th className="px-4 py-3.5 font-bold border-b border-coffee-700 text-right text-orange-400 whitespace-nowrap">RL's Learned Range</th>
+                                    <th className="px-4 py-3.5 font-bold border-b border-coffee-700 text-right text-emerald-400 whitespace-nowrap">Your Price Range</th>
+                                    <th className="px-4 py-3.5 font-bold border-b border-coffee-700 text-center">
                                         <div className="group relative flex justify-center">
                                             <span className="cursor-help">Range Match</span>
-                                            <div className="pointer-events-none absolute right-0 top-full z-20 mt-2 w-44 rounded-lg border border-coffee-700 bg-coffee-950/95 px-3 py-2 text-[9px] font-medium normal-case text-coffee-300 opacity-0 shadow-xl transition-opacity duration-200 group-hover:opacity-100">
+                                            <div className="pointer-events-none absolute right-0 top-full z-20 mt-2 w-48 rounded-lg border border-coffee-700 bg-coffee-950/95 px-3 py-2 text-[10px] font-medium normal-case text-coffee-300 opacity-0 shadow-xl transition-opacity duration-200 group-hover:opacity-100">
                                                 <p className="text-center leading-snug">
                                                     Shows whether your chosen range matched the RL agent&apos;s optimal range.
                                                 </p>
@@ -364,50 +364,50 @@ const PolicyReviewPage = ({ history, theme, toggleTheme, onBackToDebrief, onNext
                                 {playerPolicyTable.length > 0 ? (
                                     playerPolicyTable.sort((a, b) => b.count - a.count).map((state, idx) => (
                                         <tr key={idx} className="hover:bg-coffee-700/20 transition-colors">
-                                            <td className="px-3 py-2.5 whitespace-nowrap">
-                                                <span className={`font-medium px-2 py-1 rounded bg-coffee-900 border border-coffee-700 ${state.weather === 'Sunny' ? 'text-amber-400' : 'text-blue-300'}`}>
+                                            <td className="px-4 py-3.5 whitespace-nowrap">
+                                                <span className={`font-medium text-sm px-2.5 py-1.5 rounded bg-coffee-900 border border-coffee-700 ${state.weather === 'Sunny' ? 'text-amber-400' : 'text-blue-300'}`}>
                                                     {state.weather}
                                                 </span>
                                             </td>
-                                            <td className="px-3 py-2.5 text-left text-xs text-coffee-300 whitespace-nowrap">
+                                            <td className="px-4 py-3.5 text-left text-sm text-coffee-300 whitespace-nowrap">
                                                 {state.dayDistributionString}
                                             </td>
-                                            <td className="px-3 py-2.5 text-center font-mono text-xs text-coffee-300 whitespace-nowrap">
+                                            <td className="px-4 py-3.5 text-center font-mono text-sm text-coffee-300 whitespace-nowrap">
                                                 {state.inventoryRangeString}
                                             </td>
-                                            <td className="px-3 py-2.5 text-center">
+                                            <td className="px-4 py-3.5 text-center">
                                                 {state.event ? (
-                                                    <span className="inline-flex items-center justify-center px-2 py-1 rounded bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-bold">Yes</span>
+                                                    <span className="inline-flex items-center justify-center px-2.5 py-1.5 rounded bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-sm font-bold">Yes</span>
                                                 ) : (
-                                                    <span className="text-coffee-500 text-xs">No</span>
+                                                    <span className="text-coffee-500 text-sm">No</span>
                                                 )}
                                             </td>
-                                            <td className="px-3 py-2.5 text-center">
+                                            <td className="px-4 py-3.5 text-center">
                                                 {state.competitor ? (
-                                                    <span className="inline-flex items-center justify-center px-2 py-1 rounded bg-red-500/10 border border-red-500/30 text-red-400 text-xs font-bold whitespace-nowrap">
+                                                    <span className="inline-flex items-center justify-center px-2.5 py-1.5 rounded bg-red-500/10 border border-red-500/30 text-red-400 text-sm font-bold whitespace-nowrap">
                                                         {state.competitorRangeStr}
                                                     </span>
                                                 ) : (
-                                                    <span className="text-coffee-500 text-xs">No</span>
+                                                    <span className="text-coffee-500 text-sm">No</span>
                                                 )}
                                             </td>
-                                            <td className="px-3 py-2.5 text-right font-mono text-orange-400 text-xs font-bold bg-orange-500/5 whitespace-nowrap">
+                                            <td className="px-4 py-3.5 text-right font-mono text-orange-400 text-sm font-bold bg-orange-500/5 whitespace-nowrap">
                                                 {state.rlRangeString}
                                             </td>
-                                            <td className="px-3 py-2.5 text-right font-mono text-emerald-400 text-xs font-bold bg-emerald-500/5 whitespace-nowrap">
+                                            <td className="px-4 py-3.5 text-right font-mono text-emerald-400 text-sm font-bold bg-emerald-500/5 whitespace-nowrap">
                                                 {state.minPrice === null || state.maxPrice === null
                                                     ? 'N/A'
                                                     : state.minPrice === state.maxPrice
                                                     ? `$${state.minPrice.toFixed(2)}`
                                                     : `$${state.minPrice.toFixed(2)} - $${state.maxPrice.toFixed(2)}`}
                                             </td>
-                                            <td className="px-3 py-2.5 text-center">
+                                            <td className="px-4 py-3.5 text-center">
                                                 {state.policyMatch === 'full' ? (
-                                                    <Check className="w-4 h-4 mx-auto text-emerald-400" />
+                                                    <Check className="w-5 h-5 mx-auto text-emerald-400" />
                                                 ) : state.policyMatch === 'partial' ? (
-                                                    <Minus className="w-4 h-4 mx-auto text-amber-400" />
+                                                    <Minus className="w-5 h-5 mx-auto text-amber-400" />
                                                 ) : (
-                                                    <X className="w-4 h-4 mx-auto text-red-400" />
+                                                    <X className="w-5 h-5 mx-auto text-red-400" />
                                                 )}
                                             </td>
                                         </tr>
