@@ -215,16 +215,16 @@ const getScenarioEvaluation = (scenario, encounteredScenarioKeys, policyLookup) 
 
   if (policyLookup?.status !== 'ready') {
     const statusMessage = policyLookup?.status === 'missing'
-      ? 'This combination is not a valid simulation state, so it cannot occur during the simulation and has no learned RL policy to compare against. No scenario point is awarded.'
-      : 'The CSV RL policy is still loading for this scenario.';
+      ? 'This combination is not a valid simulation state in the game, so it would not appear during a real run. No scenario point is awarded.'
+      : 'We are still checking the best pricing range for this scenario.';
 
     return {
       isCorrect: false,
       isPolicyAligned: false,
       wasEncountered,
-      rangeText: policyLookup?.status === 'missing' ? 'Invalid simulation state' : 'Policy loading',
+      rangeText: policyLookup?.status === 'missing' ? 'Invalid simulation state' : 'Checking scenario',
       feedbackTone: 'amber',
-      feedbackTitle: policyLookup?.status === 'missing' ? 'Invalid simulation state' : 'Loading RL policy',
+      feedbackTitle: policyLookup?.status === 'missing' ? 'Invalid simulation state' : 'Checking scenario',
       feedbackBody: statusMessage,
       rlPrice: null,
     };
@@ -239,22 +239,22 @@ const getScenarioEvaluation = (scenario, encounteredScenarioKeys, policyLookup) 
   const isCorrect = isPolicyAligned && wasEncountered;
 
   let feedbackTone = 'emerald';
-  let feedbackTitle = 'Aligned with an encountered policy';
-  let feedbackBody = `Your answer of $${optimalPrice.toFixed(2)} sits inside the CSV RL policy range of ${rangeText}. The CSV RL price for this state is $${policyLookup.rlPrice.toFixed(2)}.`;
+  let feedbackTitle = 'Strong match';
+  let feedbackBody = `Your answer of $${optimalPrice.toFixed(2)} falls inside the recommended price range of ${rangeText} for this scenario.`;
 
   if (isPolicyAligned && !wasEncountered) {
     feedbackTone = 'yellow';
-    feedbackTitle = 'Policy aligned, but not encountered';
-    feedbackBody = `Your answer of $${optimalPrice.toFixed(2)} sits inside the CSV RL policy range of ${rangeText}, but this exact scenario did not appear in your 28-day run. Since you did not encounter this policy while playing, no scenario point is awarded.`;
+    feedbackTitle = 'Good answer, but not from your run';
+    feedbackBody = `Your answer of $${optimalPrice.toFixed(2)} falls inside the recommended price range of ${rangeText}, but this exact scenario did not appear in your 28-day run. Since it was not part of your own run, no scenario point is awarded.`;
   } else if (!isPolicyAligned) {
     if (optimalPrice < policyRange.minPrice) {
       feedbackTone = 'amber';
       feedbackTitle = 'A bit too low';
-      feedbackBody = `The CSV RL policy price here is $${policyLookup.rlPrice.toFixed(2)}, with an accepted range of ${rangeText}, so $${optimalPrice.toFixed(2)} underprices this state.`;
+      feedbackBody = `The recommended price range for this scenario is ${rangeText}, so $${optimalPrice.toFixed(2)} is a little too low.`;
     } else {
       feedbackTone = 'rose';
       feedbackTitle = 'A bit too high';
-      feedbackBody = `The CSV RL policy price here is $${policyLookup.rlPrice.toFixed(2)}, with an accepted range of ${rangeText}, so $${optimalPrice.toFixed(2)} is higher than the learned policy would usually prefer.`;
+      feedbackBody = `The recommended price range for this scenario is ${rangeText}, so $${optimalPrice.toFixed(2)} is a little too high.`;
     }
   }
 
@@ -309,7 +309,7 @@ const PolicyQuizPage = ({
 
           return [scenario.id, { status: 'ready', rlPrice }];
         } catch (error) {
-          console.warn('Failed to load CSV RL policy for quiz scenario:', error);
+          console.warn('Failed to load quiz scenario pricing guidance:', error);
           return [scenario.id, { status: 'missing', rlPrice: null }];
         }
       }));
@@ -615,8 +615,8 @@ const PolicyQuizPage = ({
           { label: 'Traffic', value: scenario.traffic },
           { label: 'Competitor', value: competitorText },
           { label: 'Your optimal price', value: Number.isFinite(optimalPrice) ? `$${optimalPrice.toFixed(2)}` : 'N/A' },
-          { label: 'CSV RL policy range', value: result.rangeText },
-          { label: 'Result', value: result.isCorrect ? 'Aligned with an encountered policy' : result.feedbackTitle, bold: true },
+          { label: 'Recommended range', value: result.rangeText },
+          { label: 'Result', value: result.isCorrect ? 'Strong match from your run' : result.feedbackTitle, bold: true },
           { label: 'Feedback', value: result.feedbackBody },
         ],
       });
@@ -726,7 +726,7 @@ const PolicyQuizPage = ({
             <div className="flex items-center justify-between gap-4 mb-3">
               <div>
                 <p className="text-xs uppercase tracking-widest text-coffee-400">Policy Question</p>
-                <p className="text-sm text-coffee-400 mt-1">Add up to {MAX_SCENARIO_CHECKS} scenario checks and compare your chosen price against the learned RL policy.</p>
+                <p className="text-sm text-coffee-400 mt-1">Add up to {MAX_SCENARIO_CHECKS} scenario checks and compare your chosen price against the recommended pricing range for each situation.</p>
               </div>
               {!submitted && (
                 <button
@@ -840,7 +840,7 @@ const PolicyQuizPage = ({
                           <div>
                             <p className="font-semibold">{scenarioResult.feedbackTitle}</p>
                             <p>{scenarioResult.feedbackBody}</p>
-                            <p className="mt-1">CSV RL policy range for this state: <span className="font-semibold">{scenarioResult.rangeText}</span></p>
+                            <p className="mt-1">Recommended price range for this state: <span className="font-semibold">{scenarioResult.rangeText}</span></p>
                           </div>
                         </div>
                       </div>
