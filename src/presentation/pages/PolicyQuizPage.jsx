@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowLeft, ClipboardCheck, Sun, Moon, CheckCircle2, Download, LogOut, PlusCircle, Trash2, XCircle, RotateCcw } from 'lucide-react';
 import { jsPDF } from 'jspdf';
