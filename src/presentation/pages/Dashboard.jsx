@@ -7,6 +7,7 @@ import { bottts } from "@dicebear/collection";
 import MarketView from "./MarketView";
 import PolicyReviewPage from "./PolicyReviewPage";
 import PolicyQuizPage from "./PolicyQuizPage";
+import RLPipelinePage from "./RLPipelinePage";
 import ProfitChart from "../components/ProfitChart";
 import CafeMap from "../components/CafeMap";
 import EndGameModal from "../components/EndGameModal";
@@ -150,6 +151,7 @@ const Dashboard = ({
   const [feedback, setFeedback] = useState(null);
   const [pendingWeeklyStats, setPendingWeeklyStats] = useState(null);
   const [showPolicyPage, setShowPolicyPage] = useState(false);
+  const [showPipelinePage, setShowPipelinePage] = useState(false);
   const [showPolicyQuizPage, setShowPolicyQuizPage] = useState(false);
   const [policyQuizState, setPolicyQuizState] = useState(createInitialPolicyQuizState);
   const [pendingLeaveAction, setPendingLeaveAction] = useState(null);
@@ -666,6 +668,35 @@ const Dashboard = ({
     );
   }
 
+  if (showPipelinePage) {
+    return (
+      <>
+        <RLPipelinePage
+          theme={theme}
+          toggleTheme={toggleTheme}
+          onBackToPolicyReview={() => {
+            setShowPipelinePage(false);
+          }}
+          onGoToQuiz={() => {
+            setShowPolicyQuizPage(true);
+            setShowPipelinePage(false);
+          }}
+          onRestart={handleRestart}
+          onExitToLogin={handleExitSession}
+          hasRestartedSimulation={hasRestartedSimulation}
+        />
+        <AnimatePresence>
+          <SessionLeaveConfirmModal
+            isOpen={pendingLeaveAction !== null}
+            actionLabel={pendingLeaveAction === "restart" ? "run it again" : "leave"}
+            onCancel={() => setPendingLeaveAction(null)}
+            onConfirm={handleConfirmLeave}
+          />
+        </AnimatePresence>
+      </>
+    );
+  }
+
   if (showPolicyPage) {
     return (
       <>
@@ -673,14 +704,11 @@ const Dashboard = ({
           history={history}
           shopName={shopName}
           onBackToDebrief={() => setShowPolicyPage(false)}
-          onGoToQuiz={() => {
-            setShowPolicyQuizPage(true);
+          onNext={() => {
+            setShowPipelinePage(true);
           }}
           theme={theme}
           toggleTheme={toggleTheme}
-          onRestart={handleRestart}
-          hasRestartedSimulation={hasRestartedSimulation}
-          onExitToLogin={handleExitSession}
         />
         <AnimatePresence>
           <SessionLeaveConfirmModal

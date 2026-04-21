@@ -56,6 +56,7 @@ const ACTION_TO_FEEDBACK_ELBOW_X_OFFSET = 0;
 const ACTION_TO_FEEDBACK_END_X_OFFSET = 0;
 const ACTION_TO_FEEDBACK_END_Y_OFFSET = 25;
 const FLOW_FIT_VIEW_OPTIONS = { padding: 0.1, maxZoom: 0.95 };
+const LARGE_FLOW_FIT_VIEW_OPTIONS = { padding: 0.04, maxZoom: 1.2 };
 
 const TONE_STYLES = {
     amber: {
@@ -1102,12 +1103,12 @@ const MobileFlow = () => (
     </div>
 );
 
-const RLPipelineFlow = ({ theme }) => {
+const RLPipelineFlow = ({ theme, showLensToggle = true, defaultLensEnabled = true, desktopHeightClass = 'h-[750px]', fitViewOptions }) => {
     const isLight = theme === 'theme-latte';
     const [activeKeys, setActiveKeys] = useState([]);
     const [pinnedKeys, setPinnedKeys] = useState([]);
-    const [isLensEnabled, setIsLensEnabled] = useState(true);
-    const [isLensVisible, setIsLensVisible] = useState(true);
+    const [isLensEnabled, setIsLensEnabled] = useState(showLensToggle ? defaultLensEnabled : false);
+    const [isLensVisible, setIsLensVisible] = useState(showLensToggle ? defaultLensEnabled : false);
     const [lensPosition, setLensPosition] = useState({ x: LENS_WIDTH / 2, y: LENS_HEIGHT / 2 });
     const [surfaceSize, setSurfaceSize] = useState({ width: 0, height: 0 });
     const [viewport, setViewport] = useState(null);
@@ -1191,36 +1192,38 @@ const RLPipelineFlow = ({ theme }) => {
 
                     <div
                         ref={surfaceRef}
-                        className={`rl-pipeline-surface rl-pipeline-flow relative hidden h-[750px] w-full overflow-hidden rounded-[28px] border md:block ${isLight ? 'border-coffee-500/45' : 'border-coffee-700/60'} ${isLensEnabled ? 'cursor-none' : ''}`}
+                        className={`rl-pipeline-surface rl-pipeline-flow relative hidden w-full overflow-hidden rounded-[28px] border md:block ${desktopHeightClass} ${isLight ? 'border-coffee-500/45' : 'border-coffee-700/60'} ${isLensEnabled ? 'cursor-none' : ''}`}
                         onPointerEnter={handleLensPointerEnter}
                         onPointerMove={handleLensPointerMove}
                         onPointerLeave={handleLensPointerLeave}
                     >
                         <div className="pointer-events-none absolute inset-x-0 top-0 z-20 h-28 bg-gradient-to-b from-black/10 via-transparent to-transparent" />
-                        <div className="absolute right-4 top-4 z-30">
-                            <button
-                                type="button"
-                                onClick={() => {
-                                    setIsLensEnabled((current) => {
-                                        const next = !current;
-                                        if (!next) {
-                                            setIsLensVisible(false);
-                                        }
-                                        return next;
-                                    });
-                                }}
-                                className={`inline-flex items-center gap-2 rounded-full border px-3.5 py-2 text-xs font-black uppercase tracking-[0.18em] shadow-xl transition-all ${isLensEnabled
-                                    ? 'border-amber-300/60 bg-amber-400/20 text-amber-50'
-                                    : isLight
-                                        ? 'border-coffee-500/40 bg-white/85 text-coffee-950 hover:border-amber-500/55 hover:text-amber-900'
-                                        : 'border-coffee-600/60 bg-coffee-950/80 text-coffee-100 hover:border-amber-400/50 hover:text-amber-200'
-                                    }`}
-                                data-lens-toggle="true"
-                            >
-                                <Search className="h-4 w-4" />
-                                {isLensEnabled ? 'Lens On' : 'Lens Off'}
-                            </button>
-                        </div>
+                        {showLensToggle ? (
+                            <div className="absolute right-4 top-4 z-30">
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        setIsLensEnabled((current) => {
+                                            const next = !current;
+                                            if (!next) {
+                                                setIsLensVisible(false);
+                                            }
+                                            return next;
+                                        });
+                                    }}
+                                    className={`inline-flex items-center gap-2 rounded-full border px-3.5 py-2 text-xs font-black uppercase tracking-[0.18em] shadow-xl transition-all ${isLensEnabled
+                                        ? 'border-amber-300/60 bg-amber-400/20 text-amber-50'
+                                        : isLight
+                                            ? 'border-coffee-500/40 bg-white/85 text-coffee-950 hover:border-amber-500/55 hover:text-amber-900'
+                                            : 'border-coffee-600/60 bg-coffee-950/80 text-coffee-100 hover:border-amber-400/50 hover:text-amber-200'
+                                        }`}
+                                    data-lens-toggle="true"
+                                >
+                                    <Search className="h-4 w-4" />
+                                    {isLensEnabled ? 'Lens On' : 'Lens Off'}
+                                </button>
+                            </div>
+                        ) : null}
 
                         <ReactFlow
                             id="rl-pipeline-main"
@@ -1229,7 +1232,7 @@ const RLPipelineFlow = ({ theme }) => {
                             nodeTypes={nodeTypes}
                             edgeTypes={edgeTypes}
                             fitView
-                            fitViewOptions={FLOW_FIT_VIEW_OPTIONS}
+                            fitViewOptions={fitViewOptions ?? (showLensToggle ? FLOW_FIT_VIEW_OPTIONS : LARGE_FLOW_FIT_VIEW_OPTIONS)}
                             nodesDraggable={false}
                             nodesConnectable={false}
                             elementsSelectable={false}

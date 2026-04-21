@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { jsPDF } from 'jspdf';
-import { TableProperties, ArrowLeft, Download, Sun, Moon, RotateCcw, LogOut, Check, X, Minus } from 'lucide-react';
-import RLPipelineFlow from '../components/RLPipelineFlow';
+import { TableProperties, ArrowLeft, Download, Sun, Moon, ChevronRight, Check, X, Minus } from 'lucide-react';
 
 const WEEKDAY_ORDER = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 const POLICY_MATCH_LABELS = {
@@ -11,7 +10,7 @@ const POLICY_MATCH_LABELS = {
     none: 'Out of range',
 };
 
-const PolicyReviewPage = ({ history, theme, toggleTheme, onBackToDebrief, onRestart, onGoToQuiz, onExitToLogin, hasRestartedSimulation = false }) => {
+const PolicyReviewPage = ({ history, theme, toggleTheme, onBackToDebrief, onNext }) => {
     const [isExporting, setIsExporting] = useState(false);
 
     if (!history || history.length < 2) return null;
@@ -276,35 +275,9 @@ const PolicyReviewPage = ({ history, theme, toggleTheme, onBackToDebrief, onRest
                         <ArrowLeft className="w-5 h-5" />
                         Back to Debrief
                     </motion.button>
-                    {!hasRestartedSimulation && (
-                        <motion.button
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            onClick={onRestart}
-                            className="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2 px-4 rounded-lg shadow-[0_0_15px_rgba(16,185,129,0.3)] transition-all flex items-center gap-2"
-                        >
-                            <RotateCcw className="w-4 h-4" />
-                            Run Simulation Again
-                        </motion.button>
-                    )}
                 </div>
 
                 <div className="flex gap-4">
-                    <div className="relative group">
-                        <motion.button
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            onClick={onGoToQuiz}
-                            className="bg-amber-600 hover:bg-amber-500 text-coffee-950 font-bold py-2 px-4 rounded-lg shadow-[0_0_15px_rgba(245,158,11,0.25)] transition-all"
-                        >
-                            Go to Quiz
-                        </motion.button>
-                        <div className="absolute right-0 top-full mt-2 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-200 z-20">
-                            <div className="bg-coffee-950 border border-coffee-700 text-coffee-100 text-xs rounded-lg px-3 py-2 shadow-xl whitespace-nowrap">
-                                Test your understanding with some quick policy questions.
-                            </div>
-                        </div>
-                    </div>
                     <motion.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
@@ -318,11 +291,11 @@ const PolicyReviewPage = ({ history, theme, toggleTheme, onBackToDebrief, onRest
                     <motion.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
-                        onClick={onExitToLogin}
-                        className="bg-red-600 hover:bg-red-500 text-white font-bold py-2 px-4 rounded-lg shadow-[0_0_15px_rgba(220,38,38,0.28)] transition-all flex items-center gap-2"
+                        onClick={onNext}
+                        className="bg-amber-600 hover:bg-amber-500 text-coffee-950 font-bold py-2 px-4 rounded-lg shadow-[0_0_15px_rgba(245,158,11,0.25)] transition-all flex items-center gap-2"
                     >
-                        <LogOut className="w-4 h-4" />
-                        Exit the Session
+                        Next
+                        <ChevronRight className="w-4 h-4" />
                     </motion.button>
                     <button
                         onClick={toggleTheme}
@@ -446,19 +419,6 @@ const PolicyReviewPage = ({ history, theme, toggleTheme, onBackToDebrief, onRest
                                 )}
                             </tbody>
                         </table>
-                    </div>
-                </div>
-
-                <div className="w-full mt-4 bg-coffee-800 border border-coffee-700 rounded-xl overflow-hidden">
-                    <div className="p-4 bg-coffee-900/50 border-b border-coffee-700">
-                        <h3 className="text-lg font-bold text-orange-400">How the RL Pipeline Works</h3>
-                        <p className="text-xs text-coffee-400 mt-1">
-                            This flow shows how the RL agent learns pricing over time by observing, acting, and updating its policy from rewards and penalties | Click on the boxes to keep the pop-ups open.
-                        </p>
-                    </div>
-
-                    <div className="p-4 md:p-6">
-                        <RLPipelineFlow theme={theme} />
                     </div>
                 </div>
 
