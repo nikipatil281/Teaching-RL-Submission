@@ -608,7 +608,7 @@ const ProfitChart = ({ data, showRLAgents = true, showMLAgent = true, hideRLLine
                                                     aria-hidden="true"
                                                     className="w-6 h-6 mx-auto object-contain"
                                                 />
-                                                <div className="absolute opacity-0 group-hover:opacity-100 bg-coffee-900 border border-coffee-600 text-coffee-100 text-[10px] py-1.5 px-3 rounded top-full mt-1 left-1/2 -translate-x-1/2 whitespace-nowrap pointer-events-none transition-opacity duration-200 z-[60] shadow-xl">Start Inventory</div>
+                                                <div className="absolute opacity-0 group-hover:opacity-100 bg-coffee-900 border border-coffee-600 text-coffee-100 text-[10px] py-1.5 px-3 rounded top-full mt-1 left-1/2 -translate-x-1/2 whitespace-nowrap pointer-events-none transition-opacity duration-200 z-[60] shadow-xl">Range of Starting Inventory</div>
                                             </div>
                                         </th>
                                         <th className="sticky top-0 z-20 p-0 text-center bg-coffee-800">
