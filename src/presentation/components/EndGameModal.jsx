@@ -292,7 +292,7 @@ const EndGameModal = ({ isOpen, history, theme, toggleTheme, shopName = "You", o
                                     <tr>
                                         <th className="px-3 py-2.5 font-bold border-b border-coffee-700 text-left whitespace-nowrap">Weather</th>
                                         <th className="px-3 py-2.5 font-bold border-b border-coffee-700 text-left whitespace-nowrap">Day(s)</th>
-                                        <th className="px-3 py-2.5 font-bold border-b border-coffee-700 text-center whitespace-nowrap">Start Inventory</th>
+                                        <th className="px-3 py-2.5 font-bold border-b border-coffee-700 text-center whitespace-nowrap">Range of Starting Inventory</th>
                                         <th className="px-3 py-2.5 font-bold border-b border-coffee-700 text-center whitespace-nowrap">Local Event</th>
                                         <th className="px-3 py-2.5 font-bold border-b border-coffee-700 text-center whitespace-nowrap">Competitor</th>
                                         <th className="px-3 py-2.5 font-bold border-b border-coffee-700 text-right whitespace-nowrap">Your Price Range</th>

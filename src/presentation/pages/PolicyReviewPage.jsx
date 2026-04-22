@@ -34,7 +34,7 @@ const PolicyReviewPage = ({ history, theme, toggleTheme, onBackToDebrief, onNext
             const tableY = margin + titleHeight;
             const tableWidth = pageWidth - (margin * 2);
             const tableHeight = pageHeight - tableY - margin;
-            const headers = ['Weather', 'Day(s)', 'Start Inventory', 'Local Event', 'Competitor', "RL's Learned Range", 'Your Price Range', 'Range Match'];
+            const headers = ['Weather', 'Day(s)', 'Range of Starting Inventory', 'Local Event', 'Competitor', "RL's Learned Range", 'Your Price Range', 'Range Match'];
             const columnFractions = [0.12, 0.09, 0.14, 0.12, 0.14, 0.15, 0.15, 0.09];
             const columnWidths = columnFractions.map((fraction) => tableWidth * fraction);
             const rows = [...playerPolicyTable].sort((a, b) => b.count - a.count);
@@ -329,7 +329,7 @@ const PolicyReviewPage = ({ history, theme, toggleTheme, onBackToDebrief, onNext
                                 <tr>
                                     <th className="px-4 py-3.5 font-bold border-b border-coffee-700 text-left whitespace-nowrap">Weather</th>
                                     <th className="px-4 py-3.5 font-bold border-b border-coffee-700 text-left whitespace-nowrap">Day(s)</th>
-                                    <th className="px-4 py-3.5 font-bold border-b border-coffee-700 text-center whitespace-nowrap">Start Inventory</th>
+                                    <th className="px-4 py-3.5 font-bold border-b border-coffee-700 text-center whitespace-nowrap">Range of Starting Inventory</th>
                                     <th className="px-4 py-3.5 font-bold border-b border-coffee-700 text-center whitespace-nowrap">Local Event</th>
                                     <th className="px-4 py-3.5 font-bold border-b border-coffee-700 text-center whitespace-nowrap">Competitor</th>
                                     <th className="px-4 py-3.5 font-bold border-b border-coffee-700 text-right text-orange-400 whitespace-nowrap">RL's Learned Range</th>
