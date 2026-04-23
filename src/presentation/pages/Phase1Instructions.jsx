@@ -22,7 +22,7 @@ import {
 const TOUR_CALLOUTS = {
   dashboard: {
     tone: 'ink',
-    text: 'This is the dashboard you will use during orientation and the 28-day challenge.',
+    text: 'This is the dashboard you will use during orientation and the 21-day challenge.',
   },
   progress: {
     tone: 'green',
@@ -260,7 +260,12 @@ const TourDashboardMock = ({ theme, currentStepId }) => {
         </div>
         <div className="tour-state-grid">
           <StateTile label="Day and Weather" value="Sunday" icon={<CloudRain size={24} />} badge="Rainy" />
-          <StateTile label="Inventory" value="606" unit="cups" icon={<Package size={25} />} badge="Opening stock" />
+          <StateTile
+            label="Inventory"
+            value="606"
+            unit="cups"
+            icon={<Package size={25} />}
+          />
           <StateTile label="Competition" value="Competitor Alert" icon={<Users size={24} />} badge="Competitor electricity out." danger />
           <StateTile label="Local Events" value="Quiet Street" icon={<Info size={24} />} badge="Normal traffic levels" />
         </div>
@@ -349,7 +354,7 @@ const TourDashboardMock = ({ theme, currentStepId }) => {
 
       <div className={`tour-progress-rail ${getFocusClass('progress')}`}>
         <strong>Day<br /><span>7</span></strong>
-        {Array.from({ length: 28 }, (_, index) => (
+        {Array.from({ length: 21 }, (_, index) => (
           <span key={index} className={index === 6 ? 'is-current' : index < 6 ? 'is-done' : ''}>
             {index < 6 ? <CheckCircle size={9} /> : index + 1}
           </span>
@@ -359,14 +364,17 @@ const TourDashboardMock = ({ theme, currentStepId }) => {
   );
 };
 
-const StateTile = ({ label, value, unit, icon, badge, danger = false }) => (
+const StateTile = ({ label, value, unit, icon, badge = null, sideContent = null, danger = false }) => (
   <div className={`tour-state-tile ${danger ? 'is-danger' : ''}`}>
-    <div>
+    <div className="tour-state-copy">
       <span>{label}</span>
       <strong>{value} {unit && <small>{unit}</small>}</strong>
       <em>{badge}</em>
     </div>
-    {icon}
+    <div className="tour-state-side">
+      {icon}
+      {sideContent}
+    </div>
   </div>
 );
 
@@ -616,7 +624,7 @@ const tourStyles = `
 
   .tour-state-grid {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.18fr) minmax(0, 0.92fr) minmax(0, 0.98fr);
     gap: 12px;
   }
 
@@ -631,6 +639,18 @@ const tourStyles = `
     border: 1px solid rgba(var(--color-coffee-700), 0.58);
     border-radius: 8px;
     background: rgba(var(--color-coffee-950), 0.24);
+  }
+
+  .tour-state-copy {
+    min-width: 0;
+    flex: 1 1 auto;
+  }
+
+  .tour-state-side {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 0 0 auto;
   }
 
   .theme-latte .tour-state-tile {
@@ -651,6 +671,44 @@ const tourStyles = `
     font-weight: 800;
     letter-spacing: 0;
     text-transform: uppercase;
+  }
+
+  .tour-state-tile em {
+    font-size: 9px;
+    white-space: normal;
+    word-break: break-word;
+    line-height: 1.3;
+    text-transform: none;
+  }
+
+  .tour-inventory-week-badge {
+    width: 90px;
+    padding: 7px 6px;
+    border: 1px solid rgba(var(--color-coffee-600), 0.7);
+    border-radius: 8px;
+    background: rgba(var(--color-coffee-950), 0.55);
+    text-align: center;
+    box-shadow: inset 0 0 18px rgba(0, 0, 0, 0.18);
+  }
+
+  .tour-inventory-week-badge strong {
+    display: block;
+    margin: 0;
+    color: #fbbf24;
+    font-size: 18px;
+    line-height: 1;
+    white-space: normal;
+  }
+
+  .tour-inventory-week-badge span,
+  .tour-inventory-week-badge small {
+    display: block;
+    margin-top: 3px;
+    color: var(--tour-muted);
+    font-size: 8px;
+    line-height: 1.2;
+    font-weight: 800;
+    text-transform: none;
   }
 
   .tour-state-tile strong {

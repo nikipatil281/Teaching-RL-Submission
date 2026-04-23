@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Sun, Cloud, CloudRain, Coffee, AlertTriangle, Users, Info } from 'lucide-react';
+import { getDaysRemainingInWeek } from '../utils/inventoryBadge';
 
 const WeatherIcon = ({ weather }) => {
   if (weather === 'Sunny') return <Sun className="w-8 h-8 text-yellow-500" />;
@@ -52,6 +53,7 @@ const EventIcon = ({ isActive }) => {
 
 const MarketView = ({ day, weather, inventory, isDayEnd, nearbyEvent, eventName, competitorPresent, competitorPrice, specialEvent }) => {
   const hasCompetitor = Boolean(competitorPresent);
+  const daysRemaining = getDaysRemainingInWeek(day);
 
   return (
     <div className="bg-coffee-800 p-4 rounded-xl border border-coffee-700 shadow-xl relative overflow-hidden w-full">
@@ -62,7 +64,7 @@ const MarketView = ({ day, weather, inventory, isDayEnd, nearbyEvent, eventName,
         <span className="text-lg">📅</span> Today's state
       </h2>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-[0.92fr_1.18fr_0.92fr_0.98fr]">
         {/* Day & Weather */}
         <div className="flex items-center justify-between bg-coffee-700/50 p-2 px-3 rounded-lg border border-transparent">
           <div>
@@ -78,15 +80,37 @@ const MarketView = ({ day, weather, inventory, isDayEnd, nearbyEvent, eventName,
         </div>
 
         {/* Inventory */}
-        <div className={`flex items-center justify-between p-2 px-3 rounded-lg border ${inventory <= 0 ? 'bg-red-900/20 border-red-500/50' : 'bg-coffee-700/50 border-transparent'}`}>
-          <div className="flex flex-col">
+        <div className={`flex items-center justify-between gap-3 p-2 px-3 rounded-lg border ${inventory <= 0 ? 'bg-red-900/20 border-red-500/50' : 'bg-coffee-700/50 border-transparent'}`}>
+          <div className="flex min-w-0 flex-col">
             <div className="text-[10px] uppercase tracking-wider text-coffee-400 font-bold mb-1">Inventory</div>
             <div className={`text-lg font-mono font-bold ${inventory <= 0 ? 'text-red-500' : 'text-indigo-300'}`}>
               {inventory} <span className="text-xs text-coffee-500 font-normal">cups</span>
             </div>
-            <div className="text-[10px] text-coffee-400">{inventory <= 0 ? 'OUT OF STOCK' : (isDayEnd ? 'Remaining after sales' : 'Opening stock')}</div>
+            {inventory <= 0 && (
+              <div className="max-w-full whitespace-normal break-words text-[11px] leading-snug text-red-300">
+                OUT OF STOCK
+              </div>
+            )}
           </div>
-          <InventoryIcon isOutOfStock={inventory <= 0} />
+          <div className="flex shrink-0 items-center gap-2">
+            <InventoryIcon isOutOfStock={inventory <= 0} />
+            {daysRemaining !== null && (
+              <div className="flex w-[112px] shrink-0 flex-col items-center justify-center rounded-lg border border-coffee-600/70 bg-coffee-900/70 px-2 py-2 text-center shadow-inner">
+                <div className={`text-lg font-black leading-none ${inventory <= 0 ? 'text-red-300' : 'text-amber-300'}`}>
+                  {daysRemaining}
+                </div>
+                <div className="mt-1 text-[9px] font-semibold uppercase leading-tight text-coffee-300">
+                  Days remaining
+                </div>
+                <div className="text-[9px] font-semibold uppercase leading-tight text-coffee-300">
+                  in this week
+                </div>
+                <div className="text-[9px] font-semibold leading-tight text-coffee-400">
+                  (including today)
+                </div>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Competitor */}

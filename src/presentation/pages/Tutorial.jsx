@@ -43,14 +43,17 @@ const Tutorial = ({ onComplete, theme, toggleTheme, shopName, userAvatar = 'Leo'
       dayName: '',
       playerRevenue: 0,
       playerProfit: 0,
+      playerCumulativeGrossProfit: 0,
       playerGrossProfit: 0,
       playerReward: 0,
       playerSales: 0,
       mlRevenue: 0,
       mlProfit: 0,
+      mlCumulativeGrossProfit: 0,
       mlGrossProfit: 0,
       mlReward: 0,
       mlSales: 0,
+      competitorCumulativeGrossProfit: 0,
       competitorGrossProfit: 0
     }
   ]);
@@ -111,7 +114,7 @@ const Tutorial = ({ onComplete, theme, toggleTheme, shopName, userAvatar = 'Leo'
       return {
         dayStr: maxProfitDay.dayName || maxProfitDay.day,
         price: maxProfitDay.playerPrice,
-        profit: maxProfitDay.playerDailyGrossProfit ?? Math.max(maxProfitDay.playerDailyProfit ?? 0, 0),
+        profit: maxProfitDay.playerDailyProfit ?? 0,
         reward: maxProfitDay.playerDailyReward || 0
       };
     }
@@ -160,7 +163,7 @@ const Tutorial = ({ onComplete, theme, toggleTheme, shopName, userAvatar = 'Leo'
     const playerPenalty = day === 7 ? MarketService.calculateWeekWastagePenalty(nextPlayerInv) : 0;
     const playerRewardComponent = playerProfitBreakdown.gross - playerProfitBreakdown.cogs;
     const playerPenaltyComponent = playerProfitBreakdown.penalty + playerPenalty;
-    const playerProfit = playerRewardComponent - playerPenaltyComponent;
+    const playerProfit = playerRewardComponent;
 
     // Calculate Competitor Results for Graph
     let compRevenue = 0;
@@ -222,7 +225,8 @@ const Tutorial = ({ onComplete, theme, toggleTheme, shopName, userAvatar = 'Leo'
     const mlRevenue = mlSales * mlPrice;
     const mlProfitBreakdown = MarketService.calculateDailyProfit(mlSales, mlPrice, conditions.day);
     const mlGrossProfit = mlProfitBreakdown.gross - mlProfitBreakdown.cogs;
-    const mlProfit = mlProfitBreakdown.netProfit;
+    const mlPenalty = day === 7 ? MarketService.calculateWeekWastagePenalty(mlInventory - mlSales) : 0;
+    const mlProfit = mlGrossProfit;
 
     // 2. Determine Feedback (Observation only)
     let message = "";
@@ -292,9 +296,10 @@ const Tutorial = ({ onComplete, theme, toggleTheme, shopName, userAvatar = 'Leo'
         break;
     }
 
-    const playerRewardData = MarketService.calculateReward(playerProfit);
-    const playerDailyReward = playerRewardData.total;
-    fb.value = playerRewardComponent;
+    const playerRewardData = MarketService.calculateReward(playerRewardComponent);
+    const playerNetRewardData = MarketService.calculateNetReward(playerRewardComponent, playerPenaltyComponent);
+    const playerDailyReward = playerNetRewardData.total;
+    fb.value = playerProfit;
     fb.playerReward = playerDailyReward;
     setFeedback(fb);
 
@@ -304,6 +309,7 @@ const Tutorial = ({ onComplete, theme, toggleTheme, shopName, userAvatar = 'Leo'
       dayName: conditions.day,
       playerRevenue: history[history.length - 1].playerRevenue + playerRevenue,
       playerProfit: (history[history.length - 1].playerProfit || 0) + playerProfit,
+      playerCumulativeGrossProfit: (history[history.length - 1].playerCumulativeGrossProfit || 0) + playerProfit - playerPenalty,
       playerGrossProfit: (history[history.length - 1].playerGrossProfit || 0) + playerRewardComponent,
       playerDailyRevenue: playerRevenue,
       playerDailyProfit: playerProfit,
@@ -313,10 +319,11 @@ const Tutorial = ({ onComplete, theme, toggleTheme, shopName, userAvatar = 'Leo'
       playerLowSalesPenalty: playerProfitBreakdown.penalty,
       playerReward: (history[history.length - 1].playerReward || 0) + playerDailyReward,
       playerDailyReward: playerDailyReward,
-      playerDailyRewardPoints: parseFloat(playerRewardComponent.toFixed(2)),
+      playerDailyRewardPoints: playerRewardData.total,
       playerDailyPenaltyPoints: parseFloat(playerPenaltyComponent.toFixed(2)),
       competitorRevenue: (history[history.length - 1].competitorRevenue || 0) + compRevenue,
       competitorProfit: (history[history.length - 1].competitorProfit || 0) + compProfit,
+      competitorCumulativeGrossProfit: (history[history.length - 1].competitorCumulativeGrossProfit || 0) + compProfit,
       competitorGrossProfit: (history[history.length - 1].competitorGrossProfit || 0) + compGrossProfit,
       competitorDailyRevenue: compRevenue,
       competitorDailyProfit: compProfit,
@@ -329,6 +336,7 @@ const Tutorial = ({ onComplete, theme, toggleTheme, shopName, userAvatar = 'Leo'
       mlPrice: mlPrice,
       mlRevenue: (history[history.length - 1].mlRevenue || 0) + mlRevenue,
       mlProfit: (history[history.length - 1].mlProfit || 0) + mlProfit,
+      mlCumulativeGrossProfit: (history[history.length - 1].mlCumulativeGrossProfit || 0) + mlProfit - mlPenalty,
       mlGrossProfit: (history[history.length - 1].mlGrossProfit || 0) + mlGrossProfit,
       mlDailyProfit: mlProfit,
       mlDailyGrossProfit: mlGrossProfit,
@@ -362,7 +370,7 @@ const Tutorial = ({ onComplete, theme, toggleTheme, shopName, userAvatar = 'Leo'
       const endOfWeek = finalHistory[finalHistory.length - 1] || { playerProfit: 0, playerRevenue: 0, playerGrossProfit: 0 };
 
       const weeklyStats = {
-        playerTotal: endOfWeek.playerProfit - startOfWeek.playerProfit,
+        playerTotal: (endOfWeek.playerProfit - startOfWeek.playerProfit) - playerPenalty,
         mlTotal: 0, // No ML in tutorial
         rlTotal: 0,
         competitorTotal: 0,

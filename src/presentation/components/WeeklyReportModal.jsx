@@ -68,7 +68,7 @@ const WeeklyAgentSummaryCard = ({
         {name}
       </div>
       <div className={`mt-6 text-[10px] font-black uppercase tracking-widest ${theme === 'theme-latte' ? 'text-coffee-500' : 'text-coffee-300'}`}>
-        Net Profit
+        Gross Profit
       </div>
       <div className="mt-1 font-mono text-3xl font-black leading-none text-coffee-100">
         <RollingNumber value={total} prefix="$" />
@@ -88,7 +88,7 @@ const WeeklyAgentSummaryCard = ({
         <div>Revenue (after cost): <StoryNumber>${coffeeEarnings?.toFixed(0) || '0'}</StoryNumber></div>
         <div>So, cups unsold this week: <StoryNumber>{inventoryLeft}</StoryNumber></div>
         <div>Wastage Penalty (${WASTAGE_COST_PER_CUP.toFixed(1)} per unsold cup): <StoryNumber>${penalty?.toFixed(2) || '0.00'}</StoryNumber></div>
-        <div>Hence, Net reward: <StoryNumber>${total.toFixed(0)}</StoryNumber></div>
+        <div>Hence, Gross profit: <StoryNumber>${total.toFixed(0)}</StoryNumber></div>
       </div>
     </div>
   </div>

@@ -29,7 +29,7 @@ A guided 7-day trading week where you run your coffee shop solo. Each day introd
 
 At the end of the week, you get a **Weekly Report** with a pricing policy summary showing how your decisions compared across different market conditions.
 
-### Phase 2 — Main Simulation (28 Days)
+### Phase 2 — Main Simulation (21 Days)
 Now you play alongside two AI agents — an **ML Agent** (pattern-based predictor) and an **RL Agent** (Q-learning) — experiencing the same market conditions you do. At the end of each week, you review a performance report comparing your profit, sales, and pricing policy against the agents.
 
 You can also customise the simulation by toggling which market variables are active (Weather, Local Events, Competitor).

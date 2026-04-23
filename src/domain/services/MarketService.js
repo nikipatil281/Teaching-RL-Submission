@@ -189,13 +189,12 @@ export class MarketService {
     const gross = sold * normalizedPrice;
     const cogs = sold * Constants.CUP_COST;
     const baseProfit = gross - cogs;
-    const penalty = this.calculateDailyPenalty(sold, dayName);
     
     return {
       gross,
       cogs,
-      penalty,
-      netProfit: baseProfit - penalty
+      penalty: this.calculateDailyPenalty(sold, dayName),
+      netProfit: baseProfit
     };
   }
 
@@ -210,12 +209,27 @@ export class MarketService {
   /**
    * Calculates total reward points based on profit.
    */
-  static calculateReward(dailyNetProfit) {
-    const value = Number(dailyNetProfit) || 0;
+  static calculateReward(dailyProfit) {
+    const value = Number(dailyProfit) || 0;
     return {
       total: parseFloat(value.toFixed(2)),
       rewardPoints: parseFloat(Math.max(0, value).toFixed(2)),
       penaltyPoints: parseFloat(Math.max(0, -value).toFixed(2))
+    };
+  }
+
+  /**
+   * Calculates net reward points after penalties.
+   */
+  static calculateNetReward(rewardPoints, penaltyPoints) {
+    const reward = Number(rewardPoints) || 0;
+    const penalty = Number(penaltyPoints) || 0;
+    const value = reward - penalty;
+
+    return {
+      total: parseFloat(value.toFixed(2)),
+      rewardPoints: parseFloat(Math.max(0, reward).toFixed(2)),
+      penaltyPoints: parseFloat(Math.max(0, penalty).toFixed(2))
     };
   }
 
@@ -236,12 +250,12 @@ export class MarketService {
    */
   static generateMainGameConditions(dayNumber) {
     const schedule = this.initMainGameSchedule();
-    const index = Math.max(0, Math.min(27, Math.floor(Number(dayNumber) || 1) - 1));
+    const index = Math.max(0, Math.min(20, Math.floor(Number(dayNumber) || 1) - 1));
     return { ...schedule[index] };
   }
 
   /**
-   * Initializes the main game schedule (28 days).
+   * Initializes the main game schedule (21 days).
    */
   static initMainGameSchedule(forceReset = false) {
     if (this.mainGameSchedule && !forceReset) return this.mainGameSchedule;
@@ -267,7 +281,7 @@ export class MarketService {
       }
 
       const candidate = [];
-      for (let i = 0; i < 28; i++) {
+      for (let i = 0; i < 21; i++) {
         const dayName = Constants.DAYS[i % 7];
         const weekIndex = Math.floor(i / 7);
         const baseState = statesByDay[dayName][weekIndex];

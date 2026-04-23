@@ -115,18 +115,22 @@ const Dashboard = ({
       dayName: "",
       playerRevenue: 0,
       playerProfit: 0,
+      playerCumulativeGrossProfit: 0,
       playerGrossProfit: 0,
       playerReward: 0,
       mlRevenue: 0,
       mlProfit: 0,
+      mlCumulativeGrossProfit: 0,
       mlGrossProfit: 0,
       mlReward: 0,
       rlRevenue: 0,
       rlProfit: 0,
+      rlCumulativeGrossProfit: 0,
       rlGrossProfit: 0,
       rlReward: 0,
       competitorRevenue: 0,
       competitorProfit: 0,
+      competitorCumulativeGrossProfit: 0,
       competitorGrossProfit: 0,
       playerSales: 0,
       mlSales: 0,
@@ -194,7 +198,7 @@ const Dashboard = ({
       return {
         dayNum: lastOccurrence.day.replace("Day ", ""),
         price: lastOccurrence.playerPrice,
-        profit: lastOccurrence.playerDailyGrossProfit ?? Math.max(lastOccurrence.playerDailyProfit ?? 0, 0),
+        profit: lastOccurrence.playerDailyProfit ?? 0,
         reward: lastOccurrence.playerDailyReward,
         dayName: lastOccurrence.dayName || conditions.day // Fallback
       };
@@ -336,24 +340,22 @@ const Dashboard = ({
       mlPenalty = MarketService.calculateWeekWastagePenalty(nextMlInv);
       rlPenalty = MarketService.calculateWeekWastagePenalty(nextRlInv);
       competitorPenalty = MarketService.calculateWeekWastagePenalty(nextCompInv);
-
-      playerDailyProfit -= playerPenalty;
-      mlDailyProfit -= mlPenalty;
-      rlDailyProfit -= rlPenalty;
-      compDailyProfit -= competitorPenalty;
     }
 
     const playerPenaltyComponent = playerBreakdown.penalty + playerPenalty;
     const mlPenaltyComponent = mlBreakdown.penalty + mlPenalty;
     const rlPenaltyComponent = rlBreakdown.penalty + rlPenalty;
 
-    const playerRewardData = MarketService.calculateReward(playerDailyProfit);
-    const mlRewardData = MarketService.calculateReward(mlDailyProfit);
-    const rlRewardData = MarketService.calculateReward(rlDailyProfit);
+    const playerRewardData = MarketService.calculateReward(playerRewardComponent);
+    const mlRewardData = MarketService.calculateReward(mlRewardComponent);
+    const rlRewardData = MarketService.calculateReward(rlRewardComponent);
+    const playerNetRewardData = MarketService.calculateNetReward(playerRewardComponent, playerPenaltyComponent);
+    const mlNetRewardData = MarketService.calculateNetReward(mlRewardComponent, mlPenaltyComponent);
+    const rlNetRewardData = MarketService.calculateNetReward(rlRewardComponent, rlPenaltyComponent);
 
-    const playerDailyReward = playerRewardData.total;
-    const mlDailyReward = mlRewardData.total;
-    const rlDailyReward = rlRewardData.total;
+    const playerDailyReward = playerNetRewardData.total;
+    const mlDailyReward = mlNetRewardData.total;
+    const rlDailyReward = rlNetRewardData.total;
 
     const mappedWeatherStr = currentConditions.weather.charAt(0).toUpperCase() + currentConditions.weather.slice(1);
 
@@ -367,11 +369,11 @@ const Dashboard = ({
       playerDailyReward,
       mlDailyReward,
       rlDailyReward,
-      playerDailyRewardPoints: parseFloat(playerRewardComponent.toFixed(2)),
+      playerDailyRewardPoints: playerRewardData.total,
       playerDailyPenaltyPoints: parseFloat(playerPenaltyComponent.toFixed(2)),
-      mlDailyRewardPoints: parseFloat(mlRewardComponent.toFixed(2)),
+      mlDailyRewardPoints: mlRewardData.total,
       mlDailyPenaltyPoints: parseFloat(mlPenaltyComponent.toFixed(2)),
-      rlDailyRewardPoints: parseFloat(rlRewardComponent.toFixed(2)),
+      rlDailyRewardPoints: rlRewardData.total,
       rlDailyPenaltyPoints: parseFloat(rlPenaltyComponent.toFixed(2)),
 
       // Cumulative Revenue
@@ -385,6 +387,10 @@ const Dashboard = ({
       mlProfit: (lastRecord.mlProfit || 0) + mlDailyProfit,
       rlProfit: (lastRecord.rlProfit || 0) + rlDailyProfit,
       competitorProfit: (lastRecord.competitorProfit || 0) + compDailyProfit,
+      playerCumulativeGrossProfit: (lastRecord.playerCumulativeGrossProfit || 0) + playerDailyProfit - playerPenalty,
+      mlCumulativeGrossProfit: (lastRecord.mlCumulativeGrossProfit || 0) + mlDailyProfit - mlPenalty,
+      rlCumulativeGrossProfit: (lastRecord.rlCumulativeGrossProfit || 0) + rlDailyProfit - rlPenalty,
+      competitorCumulativeGrossProfit: (lastRecord.competitorCumulativeGrossProfit || 0) + compDailyProfit - competitorPenalty,
       playerGrossProfit: (lastRecord.playerGrossProfit || 0) + playerRewardComponent,
       mlGrossProfit: (lastRecord.mlGrossProfit || 0) + mlRewardComponent,
       rlGrossProfit: (lastRecord.rlGrossProfit || 0) + rlRewardComponent,
@@ -468,10 +474,10 @@ const Dashboard = ({
       };
 
       const weeklyStats = {
-        playerTotal: (newRecord.playerProfit || 0) - (startOfWeek.playerProfit || 0),
-        mlTotal: (newRecord.mlProfit || 0) - (startOfWeek.mlProfit || 0),
-        rlTotal: (newRecord.rlProfit || 0) - (startOfWeek.rlProfit || 0),
-        competitorTotal: (newRecord.competitorProfit || 0) - (startOfWeek.competitorProfit || 0),
+        playerTotal: ((newRecord.playerProfit || 0) - (startOfWeek.playerProfit || 0)) - playerPenalty,
+        mlTotal: ((newRecord.mlProfit || 0) - (startOfWeek.mlProfit || 0)) - mlPenalty,
+        rlTotal: ((newRecord.rlProfit || 0) - (startOfWeek.rlProfit || 0)) - rlPenalty,
+        competitorTotal: ((newRecord.competitorProfit || 0) - (startOfWeek.competitorProfit || 0)) - competitorPenalty,
         playerRevenue: (newRecord.playerRevenue || 0) - (startOfWeek.playerRevenue || 0),
         mlRevenue: (newRecord.mlRevenue || 0) - (startOfWeek.mlRevenue || 0),
         rlRevenue: (newRecord.rlRevenue || 0) - (startOfWeek.rlRevenue || 0),
@@ -511,7 +517,7 @@ const Dashboard = ({
       color: 'blue',
       icon: <Info />,
       title: 'Daily Results',
-      value: playerRewardComponent,
+      value: playerDailyProfit,
       playerSales,
       playerReward: playerDailyReward,
       showZeroMarginInsight: normalizedPlayerPrice === 1
@@ -530,7 +536,7 @@ const Dashboard = ({
     }
 
     // End Game Trap
-    if (day >= 28) {
+    if (day >= 21) {
       openEndgameModal();
       return;
     }
@@ -576,15 +582,15 @@ const Dashboard = ({
     if (pendingNextDayStr) {
       const nextDayNum = pendingNextDayStr.nextDayNum;
 
-      // End game after week 4 report
-      if (day === 28) {
+      // End game after week 3 report
+      if (day === 21) {
         openEndgameModal();
         return;
       }
 
       advanceDay(nextDayNum, pendingNextDayStr.pInv, pendingNextDayStr.mInv, pendingNextDayStr.rInv, pendingNextDayStr.cInv);
     } else {
-      if (day === 28) {
+      if (day === 21) {
         openEndgameModal();
       } else {
         advanceDay(day + 1);
@@ -929,7 +935,7 @@ const Dashboard = ({
           </div>
         </div>
 
-        {/* Right Sidebar: Timeline (Desktop Only) specifically for 28 Days */}
+        {/* Right Sidebar: Timeline (Desktop Only) specifically for 21 Days */}
         <div className={`${useCompactDashboardLayout ? 'hidden' : 'hidden lg:flex'} flex-col items-center w-[60px] shrink-0 min-h-0 self-stretch`}>
           <div className="flex flex-col items-center w-full bg-coffee-800/30 py-4 px-2 rounded-2xl border border-coffee-700/50 relative overflow-hidden h-full min-h-0">
 
@@ -941,9 +947,9 @@ const Dashboard = ({
               {/* Timeline continuous axis */}
               <div className="absolute top-2 bottom-2 left-1/2 -translate-x-1/2 w-0.5 bg-coffee-700/40 z-0 h-full" />
 
-              {/* Nodes for all 28 days with spacing */}
+              {/* Nodes for all 21 days with spacing */}
               <div className="relative z-10 flex flex-col h-auto w-full items-center gap-1.5 py-2">
-                {Array.from({ length: 28 }, (_, i) => i + 1).map((d) => {
+                {Array.from({ length: 21 }, (_, i) => i + 1).map((d) => {
                   const isPast = d < day;
                   const isCurrent = d === day;
                   const isLocked = false;
@@ -994,7 +1000,7 @@ const Dashboard = ({
 
       <WeeklyReportModal
         isOpen={weeklyModalOpen}
-        weekNumber={Math.floor(day / 7)}
+        weekNumber={Math.ceil(day / 7)}
         data={
           weekData || {
             playerTotal: 0,

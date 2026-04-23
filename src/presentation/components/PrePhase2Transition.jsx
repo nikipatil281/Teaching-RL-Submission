@@ -66,7 +66,7 @@ const PrePhase2Transition = ({
             border: "border-purple-400/20",
             title: "The Ultimate Goal",
             icon: <Zap className="w-5 h-5" />,
-            text: "The main goal of this 28-day simulation is to truly understand how an Reinforcement Learning agent dynamically balances Exploring new pricing options and Exploiting known strategies. Finally, learning the policies to maximise the cumulative rewards."
+            text: "The main goal of this 21-day simulation is to truly understand how an Reinforcement Learning agent dynamically balances Exploring new pricing options and Exploiting known strategies. Finally, learning the policies to maximise the cumulative rewards."
         }
     ];
 
@@ -109,10 +109,10 @@ const PrePhase2Transition = ({
                         Phase 2 (Main Simulation)
                     </h1>
                     <p className="text-lg md:text-xl text-coffee-300 font-medium max-w-2xl mx-auto">
-                        Welcome to the 28-day challenge. It's time to refine your pricing strategies alongside an Machine Learning (ML) advisor!
+                        Welcome to the 21-day challenge. It's time to refine your pricing strategies alongside an Machine Learning (ML) advisor!
                     </p>
                     <p className="mt-3 text-sm md:text-base text-coffee-400 font-medium max-w-3xl mx-auto">
-                        While you review this page, the app is quietly preparing the ML advisor and RL benchmark so both are ready once the 28-day simulation starts.
+                        While you review this page, the app is quietly preparing the ML advisor and RL benchmark so both are ready once the 21-day simulation starts.
                     </p>
                 </div>
 

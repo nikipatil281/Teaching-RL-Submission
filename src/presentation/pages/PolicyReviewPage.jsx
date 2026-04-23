@@ -1,13 +1,44 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { jsPDF } from 'jspdf';
-import { TableProperties, ArrowLeft, Download, Sun, Moon, ChevronRight, Check, X, Minus } from 'lucide-react';
+import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ReferenceLine } from 'recharts';
+import { TableProperties, ArrowLeft, Download, Sun, Moon, ChevronRight, Check, X, Minus, BarChart3 } from 'lucide-react';
 
 const WEEKDAY_ORDER = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 const POLICY_MATCH_LABELS = {
     full: 'In range',
     partial: 'Partial',
     none: 'Out of range',
+};
+const PLAYER_COLOR = '#10b981';
+const ML_COLOR = '#1d4ed8';
+const RL_COLOR = '#f97316';
+const DAILY_COMPARISON_LEGEND = [
+    { value: 'You', type: 'square', color: PLAYER_COLOR },
+    { value: 'ML Agent', type: 'square', color: ML_COLOR },
+    { value: 'RL Agent', type: 'square', color: RL_COLOR },
+];
+
+const DailyComparisonTooltip = ({ active, payload, label, valuePrefix = '' }) => {
+    if (!(active && payload && payload.length)) return null;
+
+    return (
+        <div className="min-w-[200px] rounded-lg border border-coffee-700 bg-coffee-900/95 p-3 shadow-xl">
+            <p className="mb-2 text-sm font-bold text-coffee-100">{label}</p>
+            <div className="space-y-1.5 text-xs text-coffee-300">
+                {payload.map((entry) => (
+                    <div key={entry.dataKey} className="flex items-center justify-between gap-3">
+                        <span className="font-semibold" style={{ color: entry.color }}>
+                            {entry.name}
+                        </span>
+                        <span className="font-mono text-coffee-100">
+                            {valuePrefix}{Number(entry.value ?? 0).toFixed(2)}
+                        </span>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
 };
 
 const PolicyReviewPage = ({ history, theme, toggleTheme, onBackToDebrief, onNext }) => {
@@ -261,6 +292,18 @@ const PolicyReviewPage = ({ history, theme, toggleTheme, onBackToDebrief, onNext
         };
     });
 
+    const dailyGameplayData = history
+        .filter((record) => record.day !== 'Start')
+        .map((record) => ({
+            label: record.dayName ? `${record.dayName.slice(0, 3)} (${record.day.replace('Day ', 'D')})` : record.day,
+            playerPrice: Number(record.playerPrice ?? 0),
+            mlPrice: Number(record.mlPrice ?? 0),
+            rlPrice: Number(record.rlPrice ?? 0),
+            playerDailyProfit: Number(record.playerDailyProfit ?? 0),
+            mlDailyProfit: Number(record.mlDailyProfit ?? 0),
+            rlDailyProfit: Number(record.rlDailyProfit ?? 0),
+        }));
+
     return (
         <div className={`min-h-screen bg-coffee-950 text-coffee-100 p-4 md:p-6 xl:p-8 flex flex-col items-center animate-in fade-in duration-500 overflow-y-auto ${theme}`}>
             {/* Header / Actions */}
@@ -419,6 +462,68 @@ const PolicyReviewPage = ({ history, theme, toggleTheme, onBackToDebrief, onNext
                                 )}
                             </tbody>
                         </table>
+                    </div>
+                </div>
+
+                <div className="w-full flex flex-col bg-coffee-800 border border-coffee-700 rounded-xl overflow-hidden">
+                    <div className="p-5 md:p-6 bg-coffee-900/50 border-b border-coffee-700">
+                        <h3 className="text-xl md:text-2xl font-bold text-amber-400 flex items-center gap-3">
+                            <BarChart3 className="w-6 h-6" />
+                            Daily Gameplay Comparison
+                        </h3>
+                        <p className="text-sm text-coffee-400 mt-2">
+                            Actual day-by-day actions and gross profits for you, the ML agent, and the RL agent.
+                        </p>
+                    </div>
+
+                    <div className="grid gap-5 p-5 md:p-6">
+                        <div className="rounded-xl border border-coffee-700 bg-coffee-900/35 p-4 md:p-5">
+                            <div className="mb-4">
+                                <h4 className="text-lg font-bold text-coffee-100">Daily Prices Set</h4>
+                            </div>
+                            <div className="h-[320px] w-full">
+                                <ResponsiveContainer width="100%" height="100%">
+                                    <BarChart data={dailyGameplayData} margin={{ top: 8, right: 20, left: 8, bottom: 8 }} barGap={2} barCategoryGap="28%">
+                                        <CartesianGrid strokeDasharray="3 3" stroke="#374151" vertical={false} />
+                                        <XAxis dataKey="label" stroke="#9ca3af" tick={{ fill: '#9ca3af', fontSize: 10 }} />
+                                        <YAxis
+                                            stroke="#9ca3af"
+                                            tick={{ fill: '#9ca3af', fontSize: 10 }}
+                                            label={{ value: 'Price ($)', angle: -90, position: 'insideLeft', fill: '#9ca3af', fontSize: 10 }}
+                                        />
+                                        <Tooltip content={<DailyComparisonTooltip valuePrefix="$" />} />
+                                        <Legend payload={DAILY_COMPARISON_LEGEND} wrapperStyle={{ fontSize: '12px', color: '#cbd5e1' }} />
+                                        <Bar dataKey="playerPrice" name="You" fill={PLAYER_COLOR} radius={[4, 4, 0, 0]} />
+                                        <Bar dataKey="mlPrice" name="ML Agent" fill={ML_COLOR} radius={[4, 4, 0, 0]} />
+                                        <Bar dataKey="rlPrice" name="RL Agent" fill={RL_COLOR} radius={[4, 4, 0, 0]} />
+                                    </BarChart>
+                                </ResponsiveContainer>
+                            </div>
+                        </div>
+
+                        <div className="rounded-xl border border-coffee-700 bg-coffee-900/35 p-4 md:p-5">
+                            <div className="mb-4">
+                                <h4 className="text-lg font-bold text-coffee-100">Daily Profits</h4>
+                            </div>
+                            <div className="h-[320px] w-full">
+                                <ResponsiveContainer width="100%" height="100%">
+                                    <BarChart data={dailyGameplayData} margin={{ top: 8, right: 20, left: 8, bottom: 8 }} barGap={2} barCategoryGap="28%">
+                                        <CartesianGrid strokeDasharray="3 3" stroke="#374151" vertical={false} />
+                                        <XAxis dataKey="label" stroke="#9ca3af" tick={{ fill: '#9ca3af', fontSize: 10 }} />
+                                        <YAxis
+                                            stroke="#9ca3af"
+                                            tick={{ fill: '#9ca3af', fontSize: 10 }}
+                                            label={{ value: 'Gross Profit ($)', angle: -90, position: 'insideLeft', fill: '#9ca3af', fontSize: 10 }}
+                                        />
+                                        <Tooltip content={<DailyComparisonTooltip valuePrefix="$" />} />
+                                        <Legend payload={DAILY_COMPARISON_LEGEND} wrapperStyle={{ fontSize: '12px', color: '#cbd5e1' }} />
+                                        <Bar dataKey="playerDailyProfit" name="You" fill={PLAYER_COLOR} radius={[4, 4, 0, 0]} />
+                                        <Bar dataKey="mlDailyProfit" name="ML Agent" fill={ML_COLOR} radius={[4, 4, 0, 0]} />
+                                        <Bar dataKey="rlDailyProfit" name="RL Agent" fill={RL_COLOR} radius={[4, 4, 0, 0]} />
+                                    </BarChart>
+                                </ResponsiveContainer>
+                            </div>
+                        </div>
                     </div>
                 </div>
 

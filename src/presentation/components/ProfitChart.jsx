@@ -89,8 +89,8 @@ const CustomTooltip = ({ active, payload, label, viewMode, showRLAgents, showMLA
         const renderAgentInfo = (prefix, name, color) => {
             const dailySales = data[`${prefix}Sales`] || 0;
             const totalSales = data[`${prefix}TotalSales`] || 0;
-            const dailyProfit = data[`${prefix}DailyGrossProfit`] || 0;
-            const totalProfit = data[`${prefix}GrossProfit`] || 0;
+            const dailyProfit = data[`${prefix}DailyProfit`] || 0;
+            const totalProfit = data[`${prefix}CumulativeGrossProfit`] ?? data[`${prefix}Profit`] ?? 0;
             const dailyReward = data[`${prefix}DailyReward`] || 0;
             const totalReward = data[`${prefix}Reward`] || 0;
 
@@ -103,15 +103,15 @@ const CustomTooltip = ({ active, payload, label, viewMode, showRLAgents, showMLA
                 return (
                     <div className="mb-2 last:mb-0 border-b last:border-0 border-coffee-700 pb-2 last:pb-0">
                         <div className="flex items-center justify-between gap-3 mb-1">
-                            <span style={{ color: rewardColor }} className="font-bold">{prefix === 'player' ? 'Your' : `${name}'s`} Reward</span>
+                            <span style={{ color: rewardColor }} className="font-bold">{prefix === 'player' ? 'Your' : `${name}'s`} Net Reward</span>
                         </div>
                         <div className="grid grid-cols-1 gap-1 text-[11px] text-coffee-400 leading-snug">
                             <div className="flex justify-between">
-                                <span>Reward for the day:</span>
+                                <span>Net reward for the day:</span>
                                 <span className="text-coffee-200">{dailyReward.toFixed(1)} Pts</span>
                             </div>
                             <div className="flex justify-between">
-                                <span>Cumulative Reward:</span>
+                                <span>Cumulative net reward:</span>
                                 <span className="text-coffee-200">{totalReward.toFixed(1)} Pts</span>
                             </div>
                         </div>
@@ -470,7 +470,7 @@ const ProfitChart = ({ data, showRLAgents = true, showMLAgent = true, hideRLLine
 
                                 <Bar
                                     yAxisId="left"
-                                    dataKey="playerDailyGrossProfit"
+                                    dataKey="playerDailyProfit"
                                     name="Daily Profit"
                                     fill="#38bdf8"
                                     fillOpacity={0.75}
@@ -490,7 +490,7 @@ const ProfitChart = ({ data, showRLAgents = true, showMLAgent = true, hideRLLine
                                 <Line
                                     yAxisId="profitCumulative"
                                     type="monotone"
-                                    dataKey="playerGrossProfit"
+                                    dataKey="playerCumulativeGrossProfit"
                                     name="Cumulative Profit"
                                     stroke="#10b981"
                                     strokeWidth={4}
@@ -503,7 +503,7 @@ const ProfitChart = ({ data, showRLAgents = true, showMLAgent = true, hideRLLine
                                         <Line
                                             yAxisId="profitCumulative"
                                             type="monotone"
-                                            dataKey="mlGrossProfit"
+                                            dataKey="mlCumulativeGrossProfit"
                                             name="ML Agent Cumulative Profit"
                                             stroke="#1d4ed8"
                                             strokeWidth={2}
@@ -514,7 +514,7 @@ const ProfitChart = ({ data, showRLAgents = true, showMLAgent = true, hideRLLine
                                             <Line
                                                 yAxisId="profitCumulative"
                                                 type="monotone"
-                                                dataKey="rlGrossProfit"
+                                                dataKey="rlCumulativeGrossProfit"
                                                 name="RL Agent Cumulative Profit"
                                                 stroke="#f97316"
                                                 strokeWidth={2}
@@ -632,7 +632,7 @@ const ProfitChart = ({ data, showRLAgents = true, showMLAgent = true, hideRLLine
                                         <th className="sticky top-0 z-20 p-0 text-center bg-coffee-800">
                                             <div className="relative group inline-block p-3 hover:bg-coffee-700/50 rounded transition-colors cursor-help">
                                                 <Award className="w-4 h-4 mx-auto text-purple-400" />
-                                                <div className="absolute opacity-0 group-hover:opacity-100 bg-coffee-900 border border-coffee-600 text-coffee-100 text-[10px] py-1.5 px-3 rounded top-full mt-1 left-1/2 -translate-x-1/2 whitespace-nowrap pointer-events-none transition-opacity duration-200 z-[60] shadow-xl">Reward</div>
+                                                <div className="absolute opacity-0 group-hover:opacity-100 bg-coffee-900 border border-coffee-600 text-coffee-100 text-[10px] py-1.5 px-3 rounded top-full mt-1 left-1/2 -translate-x-1/2 whitespace-nowrap pointer-events-none transition-opacity duration-200 z-[60] shadow-xl">Reward Before Penalties</div>
                                             </div>
                                         </th>
                                         <th className="sticky top-0 z-20 p-0 text-center bg-coffee-800">
@@ -677,8 +677,8 @@ const ProfitChart = ({ data, showRLAgents = true, showMLAgent = true, hideRLLine
                                                 <td className="p-2 text-center font-mono">{row.startInventory ?? '-'}</td>
                                                 <td className="p-2 text-center font-mono text-emerald-400">${Math.round(row.playerPrice ?? 0)}</td>
                                                 <td className="p-2 text-center font-mono text-amber-500">{row.playerSales}</td>
-                                                <td className="p-2 text-center font-mono font-bold text-yellow-500">${Math.round(row.playerDailyGrossProfit ?? 0)}</td>
-                                                <td className="p-2 text-center font-mono text-purple-400">{row.playerDailyRewardPoints?.toFixed(1) || row.playerDailyReward?.toFixed(1) || '0'}</td>
+                                                <td className="p-2 text-center font-mono font-bold text-yellow-500">${Math.round(row.playerDailyProfit ?? 0)}</td>
+                                                <td className="p-2 text-center font-mono text-purple-400">{row.playerDailyRewardPoints?.toFixed(1) || '0'}</td>
                                                 <td className="p-2 text-center font-mono text-red-500">{row.playerDailyPenaltyPoints?.toFixed(1) || '0.0'}</td>
                                                 <td className="p-2 text-center font-mono text-fuchsia-400">{row.playerDailyReward?.toFixed(1) || '0'}</td>
                                             </tr>

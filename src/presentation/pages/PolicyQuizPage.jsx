@@ -245,7 +245,7 @@ const getScenarioEvaluation = (scenario, encounteredScenarioKeys, policyLookup) 
   if (isPolicyAligned && !wasEncountered) {
     feedbackTone = 'yellow';
     feedbackTitle = 'Good answer, but not from your run';
-    feedbackBody = `Your answer of $${optimalPrice.toFixed(2)} falls inside the recommended price range of ${rangeText}, but this exact scenario did not appear in your 28-day run. Since it was not part of your own run, no scenario point is awarded.`;
+    feedbackBody = `Your answer of $${optimalPrice.toFixed(2)} falls inside the recommended price range of ${rangeText}, but this exact scenario did not appear in your 21-day run. Since it was not part of your own run, no scenario point is awarded.`;
   } else if (!isPolicyAligned) {
     if (optimalPrice < policyRange.minPrice) {
       feedbackTone = 'amber';

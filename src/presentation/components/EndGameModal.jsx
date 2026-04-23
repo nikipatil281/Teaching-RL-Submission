@@ -55,8 +55,8 @@ const EndGameModal = ({ isOpen, history, theme, toggleTheme, shopName = "You", o
     const totalPlayerPenalty = (history || []).reduce((sum, r) => sum + (r.playerPenalty || 0), 0);
     const totalMlPenalty = (history || []).reduce((sum, r) => sum + (r.mlPenalty || 0), 0);
     const totalRlPenalty = (history || []).reduce((sum, r) => sum + (r.rlPenalty || 0), 0);
-    // Calculate total starting stock over 4 weeks
-    const totalCupsStock = 20000;
+    // Calculate total starting stock over 3 weeks
+    const totalCupsStock = 15000;
 
     // Calculate raw left-over cups at the very end
     const playerRemaining = totalCupsStock - playerTotalSales;
@@ -230,7 +230,7 @@ const EndGameModal = ({ isOpen, history, theme, toggleTheme, shopName = "You", o
                             <div className="flex flex-col gap-1 md:flex-row md:items-baseline md:gap-3">
                                 <div className="text-sm font-bold text-coffee-100">Performance Graphs</div>
                                 <div className="text-xs text-coffee-400">
-                                    Pick a view below. Clicking the active toggle again closes the graph panel.
+                                    Pick a view below. Clicking an active toggle again closes the graph panel.
                                 </div>
                             </div>
                             <div className="mt-3 flex flex-wrap gap-2">
