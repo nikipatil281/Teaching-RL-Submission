@@ -18,7 +18,7 @@ import DailyFeedbackModal from "../components/DailyFeedbackModal";
 
 import { MarketService } from "../../domain/services/MarketService";
 import { PriceSuggestionService } from "../../domain/services/PriceSuggestionService";
-import { WEEKLY_START_INVENTORY } from "../../domain/constants/marketConstants";
+import { MAIN_SIMULATION_DAYS, WEEKLY_START_INVENTORY } from "../../domain/constants/marketConstants";
 
 const createInitialPolicyQuizState = () => ({
   answers: {},
@@ -536,7 +536,7 @@ const Dashboard = ({
     }
 
     // End Game Trap
-    if (day >= 21) {
+    if (day >= MAIN_SIMULATION_DAYS) {
       openEndgameModal();
       return;
     }
@@ -583,14 +583,14 @@ const Dashboard = ({
       const nextDayNum = pendingNextDayStr.nextDayNum;
 
       // End game after week 3 report
-      if (day === 21) {
+      if (day === MAIN_SIMULATION_DAYS) {
         openEndgameModal();
         return;
       }
 
       advanceDay(nextDayNum, pendingNextDayStr.pInv, pendingNextDayStr.mInv, pendingNextDayStr.rInv, pendingNextDayStr.cInv);
     } else {
-      if (day === 21) {
+      if (day === MAIN_SIMULATION_DAYS) {
         openEndgameModal();
       } else {
         advanceDay(day + 1);
@@ -777,7 +777,7 @@ const Dashboard = ({
               transition={{ duration: 0.5, ease: "easeOut" }}
               className="text-xl font-bold"
             >
-              Day {day} / 28
+              Day {day} / {MAIN_SIMULATION_DAYS}
             </motion.div>
             <div className="text-xs font-semibold text-coffee-400">
               {conditions.day}
@@ -949,7 +949,7 @@ const Dashboard = ({
 
               {/* Nodes for all 21 days with spacing */}
               <div className="relative z-10 flex flex-col h-auto w-full items-center gap-1.5 py-2">
-                {Array.from({ length: 21 }, (_, i) => i + 1).map((d) => {
+                {Array.from({ length: MAIN_SIMULATION_DAYS }, (_, i) => i + 1).map((d) => {
                   const isPast = d < day;
                   const isCurrent = d === day;
                   const isLocked = false;
@@ -982,7 +982,7 @@ const Dashboard = ({
         feedback={feedback}
         theme={theme}
         day={day}
-        finalDay={28}
+        finalDay={MAIN_SIMULATION_DAYS}
         onContinue={handleContinue}
       />
 

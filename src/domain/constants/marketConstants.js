@@ -4,6 +4,7 @@
 
 export const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 export const NON_SUNNY_WEATHER = ['Cloudy', 'Rainy'];
+export const MAIN_SIMULATION_DAYS = 21;
 
 export const LOCAL_EVENTS = [
   'Music Concert',

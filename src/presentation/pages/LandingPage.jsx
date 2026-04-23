@@ -45,7 +45,7 @@ const LandingPage = ({ onComplete, theme, toggleTheme }) => {
     {
       id: 5,
       title: "Your Mission",
-      content: <>Your journey begins with a 1-week orientation of deciding the daily price of coffee while understanding the fundamental concepts of Reinforcement Learning. Upon completion, you'll lead a high-stakes 4-week mission facing real-world dynamic pricing pressure. <br /><br />Are you ready?</>,
+      content: <>Your journey begins with a 1-week orientation of deciding the daily price of coffee while understanding the fundamental concepts of Reinforcement Learning. Upon completion, you'll lead a high-stakes 3-week mission facing real-world dynamic pricing pressure. <br /><br />Are you ready?</>,
       isEnd: true,
       icon: <Target className="w-8 h-8 text-emerald-500" />,
       color: "from-emerald-500/20 to-teal-500/10",

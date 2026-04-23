@@ -250,7 +250,7 @@ export class MarketService {
    */
   static generateMainGameConditions(dayNumber) {
     const schedule = this.initMainGameSchedule();
-    const index = Math.max(0, Math.min(20, Math.floor(Number(dayNumber) || 1) - 1));
+    const index = Math.max(0, Math.min(Constants.MAIN_SIMULATION_DAYS - 1, Math.floor(Number(dayNumber) || 1) - 1));
     return { ...schedule[index] };
   }
 
@@ -281,7 +281,7 @@ export class MarketService {
       }
 
       const candidate = [];
-      for (let i = 0; i < 21; i++) {
+      for (let i = 0; i < Constants.MAIN_SIMULATION_DAYS; i++) {
         const dayName = Constants.DAYS[i % 7];
         const weekIndex = Math.floor(i / 7);
         const baseState = statesByDay[dayName][weekIndex];
