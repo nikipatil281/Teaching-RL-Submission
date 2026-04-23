@@ -359,7 +359,9 @@ export class MarketService {
 
   /** @private */
   static scheduleMeetsWeeklyConstraints(schedule) {
-    for (let week = 0; week < 4; week++) {
+    const totalWeeks = Math.ceil(schedule.length / Constants.DAYS.length);
+
+    for (let week = 0; week < totalWeeks; week++) {
       const weekSlice = schedule.slice(week * 7, (week + 1) * 7);
       const competitorDays = weekSlice.filter((s) => s.competitorPresent).length;
       const eventDays = weekSlice.filter((s) => s.nearbyEvent).length;

@@ -3,18 +3,27 @@ import { motion } from 'framer-motion';
 
 const TransitionPhase = ({ onComplete, theme }) => {
   const [countdown, setCountdown] = useState(5);
+  const onCompleteRef = React.useRef(onComplete);
+  const hasCompletedRef = React.useRef(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      onComplete();
-    }, 5000); // 5 seconds transition
-
-    return () => clearTimeout(timer);
+    onCompleteRef.current = onComplete;
   }, [onComplete]);
 
   useEffect(() => {
     const countdownTimer = setInterval(() => {
-      setCountdown((current) => (current > 1 ? current - 1 : current));
+      setCountdown((current) => {
+        if (current <= 1) {
+          if (!hasCompletedRef.current) {
+            hasCompletedRef.current = true;
+            onCompleteRef.current?.();
+          }
+          clearInterval(countdownTimer);
+          return 1;
+        }
+
+        return current - 1;
+      });
     }, 1000);
 
     return () => clearInterval(countdownTimer);
