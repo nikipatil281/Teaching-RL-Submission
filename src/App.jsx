@@ -1,5 +1,5 @@
 import React from 'react';
-import { useGame } from './application/context/GameContext';
+import { useGame } from './application/context/useGame';
 import LandingPage from './presentation/pages/LandingPage';
 import Login from './presentation/pages/Login';
 import Tutorial from './presentation/pages/Tutorial';

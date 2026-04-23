@@ -1,16 +1,6 @@
-import React, { createContext, useContext, useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { PriceSuggestionService } from '../../domain/services/PriceSuggestionService';
-
-const GameContext = createContext();
-
-export const ACTIVE_MODEL_PHASES = new Set([
-  'pre-tutorial',
-  'orientation-instructions',
-  'tutorial',
-  'pre-simulation',
-  'transition',
-  'simulation',
-]);
+import { ACTIVE_MODEL_PHASES, GameContext } from './gameContextShared';
 
 const initialBackendState = {
   ml: { ready: false, state: 'idle' },
@@ -106,15 +96,4 @@ export const GameProvider = ({ children }) => {
   };
 
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>;
-};
-
-/**
- * Hook to use the Game context.
- */
-export const useGame = () => {
-  const context = useContext(GameContext);
-  if (!context) {
-    throw new Error('useGame must be used within a GameProvider');
-  }
-  return context;
 };

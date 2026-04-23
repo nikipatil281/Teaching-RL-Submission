@@ -801,7 +801,6 @@ const Dashboard = ({
                 day={conditions.day}
                 weather={conditions.weather}
                 inventory={showPopup && pendingNextDayStr ? pendingNextDayStr.pInv : playerInventory}
-                isDayEnd={showPopup}
                 nearbyEvent={conditions.nearbyEvent}
                 eventName={conditions.eventName}
                 competitorPresent={conditions.competitorPresent}

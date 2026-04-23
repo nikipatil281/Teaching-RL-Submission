@@ -51,7 +51,7 @@ const EventIcon = ({ isActive }) => {
   return <AlertTriangle className={`absolute left-1/2 top-1/2 w-[128%] h-[128%] max-w-none -translate-x-1/2 -translate-y-1/2 ${fallbackColor}`} />;
 };
 
-const MarketView = ({ day, weather, inventory, isDayEnd, nearbyEvent, eventName, competitorPresent, competitorPrice, specialEvent }) => {
+const MarketView = ({ day, weather, inventory, nearbyEvent, eventName, competitorPresent, competitorPrice, specialEvent }) => {
   const hasCompetitor = Boolean(competitorPresent);
   const daysRemaining = getDaysRemainingInWeek(day);
 

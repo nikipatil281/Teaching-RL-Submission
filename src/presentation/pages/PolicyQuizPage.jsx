@@ -152,6 +152,20 @@ const normalizeScenarioPrice = (value) => {
   return Number.isFinite(numeric) ? String(Math.round(numeric)) : '';
 };
 
+const sanitizeScenarioPriceInput = (value) => {
+  if (value === '') return '';
+
+  const normalizedValue = normalizeScenarioPrice(value);
+  if (normalizedValue === '') return '';
+
+  const clampedValue = Math.min(MAX_GAME_PRICE, Math.max(MIN_GAME_PRICE, Number(normalizedValue)));
+  return String(clampedValue);
+};
+
+const isWholeDollarInput = (value) => /^\d+$/.test(value);
+
+const shouldBlockDecimalInput = (key) => ['.', ',', 'e', 'E', '+', '-'].includes(key);
+
 const buildScenarioStateKey = ({ day, weather, nearbyEvent, competitorPresent, competitorPrice }) => (
   [
     String(day ?? '').trim(),
@@ -384,6 +398,31 @@ const PolicyQuizPage = ({
     setQuizState((previous) => (typeof updater === 'function' ? updater(previous) : updater));
   }, [setQuizState]);
 
+  useEffect(() => {
+    updateQuizState((previous) => {
+      const normalizedScenarios = previous.scenarios.map((scenario) => {
+        const normalizedCompetitorPrice = sanitizeScenarioPriceInput(scenario.competitorPrice);
+        const normalizedOptimalPrice = sanitizeScenarioPriceInput(scenario.optimalPrice);
+
+        if (
+          normalizedCompetitorPrice === scenario.competitorPrice
+          && normalizedOptimalPrice === scenario.optimalPrice
+        ) {
+          return scenario;
+        }
+
+        return {
+          ...scenario,
+          competitorPrice: normalizedCompetitorPrice,
+          optimalPrice: normalizedOptimalPrice,
+        };
+      });
+
+      const hasChanges = normalizedScenarios.some((scenario, index) => scenario !== previous.scenarios[index]);
+      return hasChanges ? { ...previous, scenarios: normalizedScenarios } : previous;
+    });
+  }, [updateQuizState]);
+
   const handleAnswerChange = (questionId, value) => {
     if (submitted) return;
     updateQuizState((previous) => ({
@@ -409,6 +448,30 @@ const PolicyQuizPage = ({
           : scenario
       )),
     }));
+  };
+
+  const handleScenarioPriceChange = (scenarioId, field, value) => {
+    if (value === '') {
+      handleScenarioChange(scenarioId, field, '');
+      return;
+    }
+
+    if (!isWholeDollarInput(value)) {
+      return;
+    }
+
+    handleScenarioChange(scenarioId, field, value);
+  };
+
+  const handleScenarioPriceBlur = (scenarioId, field, value) => {
+    if (value === '') return;
+    handleScenarioChange(scenarioId, field, sanitizeScenarioPriceInput(value));
+  };
+
+  const handleScenarioPriceKeyDown = (event) => {
+    if (shouldBlockDecimalInput(event.key)) {
+      event.preventDefault();
+    }
   };
 
   const handleAddScenario = () => {
@@ -804,11 +867,14 @@ const PolicyQuizPage = ({
                           <span className="text-red-400 font-bold">present</span> with a price of $
                           <input
                             type="number"
-                            step="0.5"
+                            step="1"
                             min="1"
                             max="10"
+                            inputMode="numeric"
                             value={scenario.competitorPrice}
-                            onChange={(e) => handleScenarioChange(scenario.id, 'competitorPrice', e.target.value)}
+                            onChange={(e) => handleScenarioPriceChange(scenario.id, 'competitorPrice', e.target.value)}
+                            onBlur={(e) => handleScenarioPriceBlur(scenario.id, 'competitorPrice', e.target.value)}
+                            onKeyDown={handleScenarioPriceKeyDown}
                             disabled={submitted}
                             placeholder="__"
                             className="mx-1 inline-block w-20 bg-coffee-950 border border-coffee-700 rounded px-2 py-1 text-coffee-100 focus:outline-none focus:border-amber-500 disabled:opacity-70"
@@ -822,11 +888,14 @@ const PolicyQuizPage = ({
                       )}
                       <input
                         type="number"
-                        step="0.5"
+                        step="1"
                         min="1"
                         max="10"
+                        inputMode="numeric"
                         value={scenario.optimalPrice}
-                        onChange={(e) => handleScenarioChange(scenario.id, 'optimalPrice', e.target.value)}
+                        onChange={(e) => handleScenarioPriceChange(scenario.id, 'optimalPrice', e.target.value)}
+                        onBlur={(e) => handleScenarioPriceBlur(scenario.id, 'optimalPrice', e.target.value)}
+                        onKeyDown={handleScenarioPriceKeyDown}
                         disabled={submitted}
                         placeholder="__"
                         className="mx-1 inline-block w-20 bg-coffee-950 border border-coffee-700 rounded px-2 py-1 text-coffee-100 focus:outline-none focus:border-amber-500 disabled:opacity-70"

@@ -403,7 +403,7 @@ const WeeklyReportModal = ({ isOpen, weekNumber, data, onContinue, onBackToTutor
                 onClick={onContinue}
                 className="bg-amber-500 hover:bg-amber-400 text-coffee-900 text-sm px-7 py-2.5 rounded-lg font-bold shadow-lg shadow-amber-500/20 transition-transform active:scale-95 whitespace-nowrap"
               >
-                {isTutorial ? "Proceed" : (weekNumber === 3 ? "Show 3 week report" : `Continue to Week ${weekNumber + 1}`)}
+                {isTutorial ? "Proceed" : (weekNumber === 3 ? "Show final performance report" : `Continue to Week ${weekNumber + 1}`)}
               </button>
             </div>
           </div>

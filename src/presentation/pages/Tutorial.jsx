@@ -483,7 +483,6 @@ const Tutorial = ({ onComplete, theme, toggleTheme, shopName, userAvatar = 'Leo'
                 day={conditions.day}
                 weather={conditions.weather}
                 inventory={showPopup ? pendingInventory : inventory}
-                isDayEnd={showPopup}
                 nearbyEvent={conditions.nearbyEvent}
                 eventName={conditions.eventName}
                 competitorPresent={conditions.competitorPresent}
