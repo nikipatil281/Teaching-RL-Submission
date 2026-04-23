@@ -358,7 +358,7 @@ const EndGameModal = ({ isOpen, history, theme, toggleTheme, shopName = "You", o
                             className="bg-coffee-700 hover:bg-coffee-600 text-coffee-100 font-bold py-3 px-8 rounded-xl border border-coffee-600 transition-all flex items-center gap-2 text-base"
                         >
                             <ArrowRight className="w-5 h-5 rotate-180" />
-                            Back to Week 4 Report
+                            Back to Week 3 Report
                         </motion.button>
 
                         <motion.button
