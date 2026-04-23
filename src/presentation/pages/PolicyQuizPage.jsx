@@ -164,7 +164,13 @@ const sanitizeScenarioPriceInput = (value) => {
 
 const isWholeDollarInput = (value) => /^\d+$/.test(value);
 
-const shouldBlockDecimalInput = (key) => ['.', ',', 'e', 'E', '+', '-'].includes(key);
+const ALLOWED_SCENARIO_PRICE_KEYS = new Set([
+  'Tab',
+  'Enter',
+  'Escape',
+  'ArrowUp',
+  'ArrowDown',
+]);
 
 const buildScenarioStateKey = ({ day, weather, nearbyEvent, competitorPresent, competitorPrice }) => (
   [
@@ -469,9 +475,22 @@ const PolicyQuizPage = ({
   };
 
   const handleScenarioPriceKeyDown = (event) => {
-    if (shouldBlockDecimalInput(event.key)) {
+    if (event.metaKey || event.ctrlKey || event.altKey) {
+      return;
+    }
+
+    if (!ALLOWED_SCENARIO_PRICE_KEYS.has(event.key)) {
       event.preventDefault();
     }
+  };
+
+  const preventScenarioPriceTextEntry = (event) => {
+    event.preventDefault();
+  };
+
+  const handleScenarioPriceWheel = (event) => {
+    event.preventDefault();
+    event.currentTarget.blur();
   };
 
   const handleAddScenario = () => {
@@ -870,11 +889,14 @@ const PolicyQuizPage = ({
                             step="1"
                             min="1"
                             max="10"
-                            inputMode="numeric"
+                            inputMode="none"
                             value={scenario.competitorPrice}
                             onChange={(e) => handleScenarioPriceChange(scenario.id, 'competitorPrice', e.target.value)}
                             onBlur={(e) => handleScenarioPriceBlur(scenario.id, 'competitorPrice', e.target.value)}
                             onKeyDown={handleScenarioPriceKeyDown}
+                            onPaste={preventScenarioPriceTextEntry}
+                            onDrop={preventScenarioPriceTextEntry}
+                            onWheel={handleScenarioPriceWheel}
                             disabled={submitted}
                             placeholder="__"
                             className="mx-1 inline-block w-20 bg-coffee-950 border border-coffee-700 rounded px-2 py-1 text-coffee-100 focus:outline-none focus:border-amber-500 disabled:opacity-70"
@@ -891,11 +913,14 @@ const PolicyQuizPage = ({
                         step="1"
                         min="1"
                         max="10"
-                        inputMode="numeric"
+                        inputMode="none"
                         value={scenario.optimalPrice}
                         onChange={(e) => handleScenarioPriceChange(scenario.id, 'optimalPrice', e.target.value)}
                         onBlur={(e) => handleScenarioPriceBlur(scenario.id, 'optimalPrice', e.target.value)}
                         onKeyDown={handleScenarioPriceKeyDown}
+                        onPaste={preventScenarioPriceTextEntry}
+                        onDrop={preventScenarioPriceTextEntry}
+                        onWheel={handleScenarioPriceWheel}
                         disabled={submitted}
                         placeholder="__"
                         className="mx-1 inline-block w-20 bg-coffee-950 border border-coffee-700 rounded px-2 py-1 text-coffee-100 focus:outline-none focus:border-amber-500 disabled:opacity-70"
